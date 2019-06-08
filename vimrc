@@ -1,6 +1,13 @@
 set nocompatible
 call pathogen#infect()
 
+" -- Search files recursively
+set path+=**
+set wildmenu
+
+" -- Create the 'tags' file
+command! MakeTags !ctags -R .
+
 " -- Display
 set title
 set number
@@ -50,9 +57,13 @@ set noerrorbells
 let mapleader = ","
 
 imap jk <Esc>
+imap jK <Esc>
+imap Jk <Esc>
 imap JK <Esc>
 vmap jk <Esc>
 vmap JK <Esc>
+vmap jK <Esc>
+vmap Jk <Esc>
 noremap ; :
 noremap \ ;
 
@@ -61,23 +72,18 @@ nnoremap k gk
 nnoremap gO O<Esc>j
 nnoremap go o<Esc>k
 
-nmap n nzz
-nmap N Nzz
-nmap } }zz
-nmap { {zz
-
 nnoremap <silent><C-h> :set hlsearch!<cr>
 nnoremap <silent><C-l> :call NumberToggle()<cr>
 
-nmap <silent><C-Tab> :tabnext<cr>
-nmap <silent><C-S-Tab> :tabprevious<cr>
 nmap <silent><C-n> :tabnew<cr>
-map <silent><C-Tab> :tabnext<cr>
-map <silent><C-S-Tab> :tabprevious<cr>
+nmap <silent><C-j> :tabnext<cr>
+nmap <silent><C-k> :tabprevious<cr>
 map <silent><C-n> :tabnew<cr>
+map <silent><C-j> :tabnext<cr>
+map <silent><C-k> :tabprevious<cr>
 imap <silent><C-n> <ESC>:tabnew<cr>
-imap <silent><C-S-Tab> <ESC>:tabprevious<cr>
-imap <silent><C-Tab> <ESC>:tabnext<cr>
+imap <silent><C-j> <ESC>:tabnext<cr>
+imap <silent><C-k> <ESC>:tabprevious<cr>
 
 no <left> <Nop>
 no <up> ddkP
@@ -91,7 +97,6 @@ vno <left> <Nop>
 vno <up> <Nop>
 vno <right> <Nop>
 vno <down> <Nop>
-
 
 " -- Colors
 set background=dark
@@ -120,6 +125,9 @@ autocmd InsertEnter * :call DisableRelativeNumber()
 autocmd InsertLeave * :call EnableRelativeNumber()
 
 " -- Turn off line highlight in insert mode
-:autocmd InsertEnter * set cul
-:autocmd InsertLeave * set nocul
+autocmd InsertEnter * set nocul
+autocmd InsertLeave * set cul
+
+" -- Snippets
+"nnoremap <leader>switch :-1read $HOME/.vim/snippets/switch.c<cr>wa
 
