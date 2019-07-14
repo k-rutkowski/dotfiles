@@ -128,6 +128,12 @@ autocmd InsertLeave * :call EnableRelativeNumber()
 autocmd InsertEnter * set nocul
 autocmd InsertLeave * set cul
 
+" -- Code formatting shortcuts (clang format plugin)
+autocmd FileType c,cpp,objc nnoremap <buffer><leader>f :<C-u>ClangFormat<cr>
+autocmd FileType c,cpp,objc vnoremap <buffer><leader>f :ClangFormat<cr>
+"autocmd FileType c,cpp,objc map <buffer><leader>x <Plug>(operator-clang-format)
+nmap <Leader>af :ClangFormatAutoToggle<cr>
+
 " -- Snippets
 "nnoremap <leader>switch :-1read $HOME/.vim/snippets/switch.c<cr>wa
 
