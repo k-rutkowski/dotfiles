@@ -1,5 +1,16 @@
 set nocompatible
-call pathogen#infect()
+filetype off
+
+" -- Plugins
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+Plugin 'VundleVim/Vundle.vim'
+Plugin 'micha/vim-colors-solarized'
+Plugin 'Valloric/YouCompleteMe'
+call vundle#end()
+
+filetype plugin indent on
+syntax enable
 
 " -- Search files recursively
 set path+=**
@@ -42,12 +53,6 @@ set incsearch
 set backspace=2
 set hidden
 set clipboard=unnamed
-
-" -- Syntax
-syntax enable
-filetype on
-filetype plugin on
-filetype indent on
 
 " -- Beep
 set visualbell
