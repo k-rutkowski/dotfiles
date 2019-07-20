@@ -28,6 +28,11 @@ for file in $files; do
   ln -s "$dir/$file" ~/.$file
 done
 
-
+## checkout vim plugin manager
 cd $dir
 git submodule update --init --recursive
+
+## install vim plugins
+vim +PluginInstall +qall
+cd vim/bundle/YouCompleteMe
+python3 install.py --clangd-completer
