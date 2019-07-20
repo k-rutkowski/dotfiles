@@ -7,6 +7,8 @@ call vundle#begin()
 Plugin 'VundleVim/Vundle.vim'
 Plugin 'micha/vim-colors-solarized'
 Plugin 'Valloric/YouCompleteMe'
+Plugin 'scrooloose/nerdtree'
+Plugin 'benmills/vimux'
 call vundle#end()
 
 filetype plugin indent on
@@ -18,10 +20,6 @@ colorscheme solarized
 
 " -- Search files recursively
 set path+=**
-set wildmenu
-
-" -- Create the 'tags' file
-command! MakeTags !ctags -R .
 
 " -- Display
 set title
@@ -36,6 +34,7 @@ set cursorline
 set tabstop=4
 set shiftwidth=4
 set foldcolumn=1
+set wildmenu
 
 set ff=unix
 set enc=utf-8
@@ -53,6 +52,7 @@ set ignorecase
 set smartcase
 set hlsearch
 set incsearch
+set showmatch
 
 " -- Behaviour
 set backspace=2
@@ -83,15 +83,13 @@ nnoremap go o<Esc>k
 nnoremap <silent><C-h> :set hlsearch!<cr>
 nnoremap <silent><C-l> :call NumberToggle()<cr>
 
-nmap <silent><C-n> :tabnew<cr>
-nmap <silent><C-j> :tabnext<cr>
-nmap <silent><C-k> :tabprevious<cr>
-map <silent><C-n> :tabnew<cr>
-map <silent><C-j> :tabnext<cr>
-map <silent><C-k> :tabprevious<cr>
-imap <silent><C-n> <ESC>:tabnew<cr>
-imap <silent><C-j> <ESC>:tabnext<cr>
-imap <silent><C-k> <ESC>:tabprevious<cr>
+map <leader>w <C-w><C-w>
+nmap <silent><leader>n :bnext<cr>
+nmap <silent><leader>p :bprevious<cr>
+nmap <silent><leader>d :bdelete<cr>
+
+nmap <silent><leader>t :tabnext<cr>
+nmap <silent><leader>T :tabprevious<cr>
 
 no <left> <Nop>
 no <up> ddkP
@@ -105,6 +103,11 @@ vno <left> <Nop>
 vno <up> <Nop>
 vno <right> <Nop>
 vno <down> <Nop>
+
+nmap <leader>rc :tabfind $MYVIMRC<cr>
+
+" -- Create the 'tags' file
+command! MakeTags !ctags -R .
 
 " -- Functions
 function! EnableRelativeNumber()
@@ -137,6 +140,19 @@ autocmd FileType c,cpp,objc nnoremap <buffer><leader>f :<C-u>ClangFormat<cr>
 autocmd FileType c,cpp,objc vnoremap <buffer><leader>f :ClangFormat<cr>
 "autocmd FileType c,cpp,objc map <buffer><leader>x <Plug>(operator-clang-format)
 nmap <Leader>af :ClangFormatAutoToggle<cr>
+
+" -- NerdTree settings
+let g:NERDTreeQuitOnOpen=0
+let NERDTreeShowHidden=1
+let NERDTreeMinimalUI=1
+nmap <silent><leader>k :NERDTreeToggle<cr>
+nmap <silent><leader>s :NERDTreeFind<cr><leader>w<cr>
+nmap <silent><leader>S :NERDTreeFind<cr>
+
+" -- YouCompleteMe settings
+set completeopt-=preview
+let g:ycm_add_preview_to_completeopt=0
+let g:ycm_collect_identifiers_from_tags_files=1
 
 " -- Snippets
 "nnoremap <leader>switch :-1read $HOME/.vim/snippets/switch.c<cr>wa
