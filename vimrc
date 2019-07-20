@@ -25,6 +25,7 @@ set number
 set relativenumber
 set ruler
 set wrap
+set linebreak
 set scrolloff=3
 set guioptions=T
 set cursorline
@@ -72,8 +73,6 @@ vmap Jk <Esc>
 noremap ; :
 noremap \ ;
 
-nnoremap j gj
-nnoremap k gk
 nnoremap gO O<Esc>j
 nnoremap go o<Esc>k
 
