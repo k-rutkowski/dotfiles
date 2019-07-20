@@ -12,6 +12,10 @@ call vundle#end()
 filetype plugin indent on
 syntax enable
 
+" -- Colors
+set background=dark
+colorscheme solarized
+
 " -- Search files recursively
 set path+=**
 set wildmenu
@@ -101,10 +105,6 @@ vno <left> <Nop>
 vno <up> <Nop>
 vno <right> <Nop>
 vno <down> <Nop>
-
-" -- Colors
-set background=dark
-colorscheme solarized
 
 " -- Functions
 function! EnableRelativeNumber()
