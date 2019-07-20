@@ -28,3 +28,6 @@ for file in $files; do
   ln -s "$dir/$file" ~/.$file
 done
 
+
+cd $dir
+git submodule update --init --recursive
