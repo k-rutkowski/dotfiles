@@ -1,0 +1,48 @@
+# NAVIGATION
+
+H / M / L   - go to screen top / middle / bottom
+C-E / C-Y   - scroll down / up
+C-D / C-U   - scroll page down / up
+
+# EDITING
+
+:e[dit] {file}
+:f[ind] {file}
+gf          - go to file (path under cursor)
+
+# JUMPS / CHANGES
+
+C-O / C-I   - cycle through jumplist
+g; / g,     - cycle through changes
+
+# TAGS
+
+C-]    - jump to keyword definition
+C-t    - jump back (pop from the tag stack)
+:tags  - see all tags
+
+gd     - go to local definition
+
+# BUFFERS / ARGS
+
+:b {file}     - go to buffer {file}
+:buffers      - list buffers
+:bufdo {cmd}  - execute {cmd} for all buffers
+
+:args         - print all arguments
+:arga {file}  - add {file} to arg list
+:argl {files} - make a local arg copy via {files}
+
+# WINDOWS
+
+:windo {cmd}  - execute {cmd} for all windows
+:sf {file}    - split window and :find {file}
+
+# TABS
+:tabc         - close tab
+:tabe         - open tab
+:tabo         - close all other tabs
+
+# MORE
+
+https://www.hillelwayne.com/post/intermediate-vim/

@@ -83,18 +83,25 @@ nnoremap go o<Esc>k
 nnoremap <silent><C-h> :set hlsearch!<cr>
 nnoremap <silent><C-l> :call NumberToggle()<cr>
 
-map <leader>w <C-w><C-w>
+" windows
+map <leader>w <C-w>w
+map <leader>q <C-w>q
+map <leader>r <C-w>r
+map <leader>h <C-w>s
+map <leader>v <C-w>v
+
+" buffers and args
 nmap <silent><leader>n :bnext<cr>
 nmap <silent><leader>p :bprevious<cr>
 nmap <silent><leader>d :bdelete<cr>
+nmap <silent><leader>an :next<cr>
+nmap <silent><leader>ap :previous<cr>
 
-nmap <silent><leader>t :tabnext<cr>
-nmap <silent><leader>T :tabprevious<cr>
-
+" disable arrows
 no <left> <Nop>
-no <up> ddkP
+no <up> <Nop>
 no <right> <Nop>
-no <down> ddp
+no <down> <Nop>
 ino <left> <Nop>
 ino <up> <Nop>
 ino <right> <Nop>
@@ -104,10 +111,20 @@ vno <up> <Nop>
 vno <right> <Nop>
 vno <down> <Nop>
 
+" edit vim config
 nmap <leader>rc :tabfind $MYVIMRC<cr>
 
 " -- Create the 'tags' file
-command! MakeTags !ctags -R .
+function! MakeCppTags()
+	silent! execute '!ctags --language-force=c++ --c++-kinds=+p --fields=+iaS --extra=+q -h "h.hpp.inl.h++.hh.hcc" -R .'
+	redraw!
+	if v:shell_error != 0
+		echo 'failed to create tags (' v:shell_error ')'
+	else
+		echo 'tags created'
+	endif
+endfunction
+command! MakeCppTags :call MakeCppTags()
 
 " -- Functions
 function! EnableRelativeNumber()
