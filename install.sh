@@ -27,12 +27,14 @@ for file in $files; do
 done
 
 ## neovim config
-nvim_config_path=~/.config/nvim/init.vim;
+nvim_config_dir=~/.config/nvim
+nvim_config_path=$nvim_config_dir/init.vim
 if [[ -f $nvim_config_path ]]; then
   mkdir -p "$backup_dir/.config/nvim"
   mv $nvim_config_path "$backup_dir/.config/nvim"
-  ln -s "$dir/nvimrc" $nvim_config_path
 fi
+mkdir -p $nvim_config_dir
+ln -s "$dir/nvimrc" $nvim_config_path
 
 ## checkout vim plugin manager
 cd $dir
@@ -41,4 +43,4 @@ git submodule update --init --recursive
 ## install vim plugins
 vim +PluginInstall +qall
 cd vim/bundle/YouCompleteMe
-python3 install.py --clangd-completer
+python3 install.py --clang-completer
