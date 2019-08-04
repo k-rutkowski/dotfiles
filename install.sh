@@ -46,9 +46,6 @@ if [[ -f ~/.z.sh ]]; then
 fi
 ln -s "$dir/z/z.sh" ~/.z.sh
 
-## reload bash config
-. ~/.bashrc
-
 ## install vim plugins
 cd $dir
 vim +PluginInstall +qall
