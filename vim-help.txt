@@ -30,18 +30,36 @@ gd     - go to local definition
 :bufdo {cmd}  - execute {cmd} for all buffers
 
 :args         - print all arguments
+:args {files} - replace arg list
 :arga {file}  - add {file} to arg list
 :argl {files} - make a local arg copy via {files}
 
 # WINDOWS
 
-:windo {cmd}  - execute {cmd} for all windows
+C-w h/j/k/l   - navigate windows
+C-w H/J/K/L   - move windows around
+C-w r         - rotate window
 :sf {file}    - split window and :find {file}
+:sall         - open all args in separate windows
+:vert {cmd}   - make a command use vertical split
+:windo {cmd}  - execute {cmd} for all windows
 
 # TABS
+
 :tabc         - close tab
 :tabe         - open tab
 :tabo         - close all other tabs
+
+# QUICKFIX AND LOCATION LIST
+
+:vim /phrase/g ##            - search "phrase" in all args - results are on quickfix list
+:copen [height]              - open quickfix window
+:cclose                      - close quickfix window
+:cn                          - go to next quickfix item
+:cp                          - go to previous quickfix item
+:cdo s/phrase/new_phrase/g   - replace every occurence of "phrase" on quickfix list with "new_phraase"
+
+:lvim /phrase/g %            - search "phrase" in current file - results are on location list
 
 # MORE
 

@@ -9,6 +9,7 @@ Plugin 'micha/vim-colors-solarized'
 Plugin 'Valloric/YouCompleteMe'
 Plugin 'scrooloose/nerdtree'
 Plugin 'benmills/vimux'
+Plugin 'drmingdrmer/vim-toggle-quickfix'
 call vundle#end()
 
 filetype plugin indent on
@@ -40,12 +41,12 @@ set ff=unix
 set enc=utf-8
 set fileencoding=utf-8
 set fileencodings=ucs-bom,utf8,prc
-if has("win32")
-	lang C
-	set guifont=Consolas:h9:cANSI
-	set lines=30
-	set columns=130
-endif
+"if has("win32")
+"	lang C
+"	set guifont=Consolas:h9:cANSI
+"	set lines=30
+"	set columns=130
+"endif
 
 " -- Search
 set ignorecase
@@ -57,7 +58,11 @@ set showmatch
 " -- Behaviour
 set backspace=2
 set hidden
-set clipboard=unnamed
+if has("win32")
+	set clipboard=unnamed
+else
+	set clipboard=unnamedplus
+endif
 
 " -- Beep
 set visualbell
@@ -114,7 +119,9 @@ vno <down> <Nop>
 " edit vim config
 nmap <leader>rc :tabfind $MYVIMRC<cr>
 
-" -- Create the 'tags' file
+
+" -- Functions
+
 function! MakeCppTags()
 	silent! execute '!ctags --language-force=c++ --c++-kinds=+p --fields=+iaS --extra=+q -h "h.hpp.inl.h++.hh.hcc" -R .'
 	redraw!
@@ -126,7 +133,6 @@ function! MakeCppTags()
 endfunction
 command! MakeCppTags :call MakeCppTags()
 
-" -- Functions
 function! EnableRelativeNumber()
 	set number
 	set relativenumber
@@ -145,6 +151,10 @@ function! NumberToggle()
 	endif
 endfunction
 
+" -- Make quickfix window show at the bottom instead of bottom right
+autocmd FileType qf wincmd J
+
+" -- Show absolute line numbers in insert mode
 autocmd InsertEnter * :call DisableRelativeNumber()
 autocmd InsertLeave * :call EnableRelativeNumber()
 
@@ -170,6 +180,9 @@ nmap <silent><leader>S :NERDTreeFind<cr>
 set completeopt-=preview
 let g:ycm_add_preview_to_completeopt=0
 let g:ycm_collect_identifiers_from_tags_files=1
+
+" -- Toggle Quickfix Window
+nmap <leader>e <Plug>window:quickfix:loop
 
 " -- Snippets
 "nnoremap <leader>switch :-1read $HOME/.vim/snippets/switch.c<cr>wa
