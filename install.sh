@@ -8,16 +8,20 @@ while [ -h "$source" ]; do # resolve $source until the file is no longer a symli
 done
 
 dir="$( cd -P "$( dirname "$source" )" && pwd )"
+
+## pull submodules
+cd $dir
+git submodule update --init --recursive
+cd -
+
 backup_dir=~/dotfiles-bckp
 files="vimrc vim bash_aliases bash_extra"
 
-#echo "source: $source"
-#echo "dir: $dir"
-#echo "backup dir: $backup_dir"
-#echo "files: $files"
-#exit 0
-
 ## backup existing dotfiles and create symlinks to new ones
+if [[ -d $backup_dir ]]; then
+  rm -rf $backup_dir
+fi
+
 mkdir -p "$backup_dir"
 for file in $files; do
   if [[ -f ~/.$file || -d ~/.$file ]]; then
@@ -36,11 +40,18 @@ fi
 mkdir -p $nvim_config_dir
 ln -s "$dir/nvimrc" $nvim_config_path
 
-## checkout vim plugin manager
-cd $dir
-git submodule update --init --recursive
+## z
+if [[ -f ~/.z.sh ]]; then
+  mv ~/.z.sh "$backup_dir/z.sh"
+fi
+ln -s "$dir/z/z.sh" ~/.z.sh
+
+## reload bash config
+. ~/.bashrc
 
 ## install vim plugins
+cd $dir
 vim +PluginInstall +qall
+
 cd vim/bundle/YouCompleteMe
-python3 install.py --clang-completer
+#python3 install.py --clang-completer
