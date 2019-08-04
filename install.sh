@@ -54,4 +54,4 @@ cd $dir
 vim +PluginInstall +qall
 
 cd vim/bundle/YouCompleteMe
-#python3 install.py --clang-completer
+python3 install.py --clang-completer
