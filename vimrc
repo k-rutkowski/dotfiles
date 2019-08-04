@@ -18,6 +18,7 @@ syntax enable
 " -- Colors
 set background=dark
 colorscheme solarized
+set t_Co=256
 
 " -- Search files recursively
 set path+=**

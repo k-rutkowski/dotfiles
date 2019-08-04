@@ -17,16 +17,22 @@ files="vimrc vim bash_aliases bash_extra"
 #echo "files: $files"
 #exit 0
 
-## backup existing dotfiles
+## backup existing dotfiles and create symlinks to new ones
 mkdir -p "$backup_dir"
 for file in $files; do
-  mv ~/.$file "$backup_dir/$file"
-done
-
-## create symlinks
-for file in $files; do
+  if [[ -f ~/.$file || -d ~/.$file ]]; then
+    mv ~/.$file "$backup_dir/$file"
+  fi
   ln -s "$dir/$file" ~/.$file
 done
+
+## neovim config
+nvim_config_path=~/.config/nvim/init.vim;
+if [[ -f $nvim_config_path ]]; then
+  mkdir -p "$backup_dir/.config/nvim"
+  mv $nvim_config_path "$backup_dir/.config/nvim"
+  ln -s "$dir/nvimrc" $nvim_config_path
+fi
 
 ## checkout vim plugin manager
 cd $dir
