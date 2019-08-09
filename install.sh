@@ -15,7 +15,7 @@ git submodule update --init --recursive
 cd -
 
 backup_dir=~/dotfiles-bckp
-files="vimrc vim bash_aliases bash_extra"
+files="vimrc vim bash_aliases bash_extra tmux.conf tmux-themepack"
 
 ## backup existing dotfiles and create symlinks to new ones
 if [[ -d $backup_dir ]]; then
