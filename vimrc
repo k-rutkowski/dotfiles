@@ -9,7 +9,7 @@ Plugin 'micha/vim-colors-solarized'
 Plugin 'Valloric/YouCompleteMe'
 Plugin 'scrooloose/nerdtree'
 Plugin 'benmills/vimux'
-Plugin 'drmingdrmer/vim-toggle-quickfix'
+Plugin 'k-rutkowski/vim-toggle-quickfix'
 call vundle#end()
 
 filetype plugin indent on
