@@ -49,6 +49,13 @@ set fileencodings=ucs-bom,utf8,prc
 "	set columns=130
 "endif
 
+if exists('+colorcolumn')
+	set colorcolumn=100
+endif
+
+" -- Status line
+set stl=%f\ Line:%l/%L\ (%p%%)\ Col:%v\ Buf:#%n\ 0x%B
+
 " -- Search
 set ignorecase
 set smartcase
