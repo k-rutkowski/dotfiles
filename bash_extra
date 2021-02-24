@@ -1,3 +1,15 @@
 set -o vi
 . ~/.z.sh
 
+#
+# Powerline config
+#
+GOPATH=$HOME/go
+
+function _update_ps1() {
+	PS1="$($GOPATH/bin/powerline-go -error $? -jobs $(jobs -p | wc -l) -cwd-mode semifancy -newline)"
+}
+
+if [ "$TERM" != "linux" ] && [ -f "$GOPATH/bin/powerline-go" ]; then
+	PROMPT_COMMAND="_update_ps1; $PROMPT_COMMAND"
+fi
