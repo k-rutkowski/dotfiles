@@ -6,10 +6,11 @@ set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 Plugin 'VundleVim/Vundle.vim'
 Plugin 'micha/vim-colors-solarized'
-Plugin 'Valloric/YouCompleteMe'
+"Plugin 'Valloric/YouCompleteMe'
 Plugin 'scrooloose/nerdtree'
 Plugin 'benmills/vimux'
 Plugin 'k-rutkowski/vim-toggle-quickfix'
+Plugin 'whiteinge/diffconflicts'
 call vundle#end()
 
 filetype plugin indent on
