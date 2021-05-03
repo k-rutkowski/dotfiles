@@ -6,7 +6,6 @@ set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 Plugin 'VundleVim/Vundle.vim'
 Plugin 'micha/vim-colors-solarized'
-"Plugin 'Valloric/YouCompleteMe'
 Plugin 'scrooloose/nerdtree'
 Plugin 'benmills/vimux'
 Plugin 'k-rutkowski/vim-toggle-quickfix'
@@ -38,6 +37,11 @@ set tabstop=4
 set shiftwidth=4
 set foldcolumn=1
 set wildmenu
+
+set completeopt-=menu
+set completeopt+=menuone
+set completeopt+=preview
+set completeopt-=noinsert
 
 set ff=unix
 set enc=utf-8
@@ -103,6 +107,7 @@ map <leader>q <C-w>q
 map <leader>r <C-w>r
 map <leader>h <C-w>s
 map <leader>v <C-w>v
+map <leader>A <C-w>^
 
 " buffers and args
 nmap <silent><leader>n :bnext<cr>
@@ -110,6 +115,7 @@ nmap <silent><leader>p :bprevious<cr>
 nmap <silent><leader>d :bdelete<cr>
 nmap <silent><leader>an :next<cr>
 nmap <silent><leader>ap :previous<cr>
+nmap <silent><leader>a <C-^>
 
 " disable arrows
 no <left> <Nop>
@@ -182,8 +188,8 @@ let g:NERDTreeQuitOnOpen=0
 let NERDTreeShowHidden=1
 let NERDTreeMinimalUI=1
 nmap <silent><leader>k :NERDTreeToggle<cr>
-nmap <silent><leader>s :NERDTreeFind<cr><leader>w<cr>
-nmap <silent><leader>S :NERDTreeFind<cr>
+nmap <silent><leader>j :NERDTreeFind<cr><leader>w<cr>
+nmap <silent><leader>f :NERDTreeFind<cr>
 
 " -- YouCompleteMe settings
 set completeopt-=preview
