@@ -14,7 +14,7 @@ cd $dir
 git submodule update --init --recursive
 cd -
 
-backup_dir=~/dotfiles-bckp
+backup_dir="$HOME/dotfiles-bckp"
 files="vimrc vim bash_aliases bash_extra tmux.conf tmux-themepack"
 
 ## backup existing dotfiles and create symlinks to new ones
@@ -23,28 +23,35 @@ if [[ -d $backup_dir ]]; then
 fi
 
 mkdir -p "$backup_dir"
-for file in $files; do
-  if [[ -f ~/.$file || -d ~/.$file ]]; then
-    mv ~/.$file "$backup_dir/$file"
+for fname in $files; do
+  file="$HOME/.$fname"
+  if [[ -e $file ]]; then
+    mv $file "$backup_dir/$fname"
+  elif [[ -h $file ]]; then
+    rm $file
   fi
-  ln -s "$dir/$file" ~/.$file
+  ln -s "$dir/$fname" $file
 done
 
 ## neovim config
-nvim_config_dir=~/.config/nvim
+nvim_config_dir=$HOME/.config/nvim
 nvim_config_path=$nvim_config_dir/init.vim
-if [[ -f $nvim_config_path ]]; then
+if [[ -e $nvim_config_path ]]; then
   mkdir -p "$backup_dir/.config/nvim"
   mv $nvim_config_path "$backup_dir/.config/nvim"
+elif [[ -h $nvim_config_path ]]; then
+  rm $nvim_config_path
 fi
 mkdir -p $nvim_config_dir
 ln -s "$dir/nvimrc" $nvim_config_path
 
 ## z
-if [[ -f ~/.z.sh ]]; then
-  mv ~/.z.sh "$backup_dir/z.sh"
+if [[ -e "$HOME/.z.sh" ]]; then
+  mv "$HOME/.z.sh" "$backup_dir/z.sh"
+elif [[ -h "$HOME/.z.sh" ]]; then
+  rm $HOME/.z.sh
 fi
-ln -s "$dir/z/z.sh" ~/.z.sh
+ln -s "$dir/z/z.sh" "$HOME/.z.sh"
 
 ## install vim plugins
 cd $dir
