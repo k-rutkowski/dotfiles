@@ -77,6 +77,11 @@ else
 	set clipboard=unnamedplus
 endif
 
+" -- Undo history
+set undofile
+set undodir=~/.vim-undo
+set undolevels=12000
+
 " -- Beep
 set visualbell
 set noerrorbells
