@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 source="${BASH_SOURCE[0]}"
 while [ -h "$source" ]; do # resolve $source until the file is no longer a symlink
@@ -32,6 +33,18 @@ for fname in $files; do
   fi
   ln -s "$dir/$fname" $file
 done
+
+## powerline config
+powerline_dir=$HOME/.config/powerline-shell
+powerline_config_path=$powerline_dir/config.json
+if [[ -e $powerline_config_path ]]; then
+  mkdir -p "$backup_dir/.config/powerline-shell"
+  mv $powerline_config_path "$backup_dir/.config/powerline-shell"
+elif [[ -h $powerline_config_path ]]; then
+  rm $powerline_config_path
+fi
+mkdir -p $powerline_dir
+ln -s "$dir/powerline-shell/config.json" $powerline_config_path
 
 ## neovim config
 nvim_config_dir=$HOME/.config/nvim
