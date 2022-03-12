@@ -14,8 +14,6 @@ alias ports='netstat -tulanp'
 alias su='sudo -i'
 alias x='exit'
 
-alias ssh-idea='ssh kr@s19.mydevil.net -p 22212'
-
 alias svn-url='svn info | grep "^Repository Root:" | cut -d" " -f3'
 alias svn-path='svn info | grep "^URL:" | cut -d" " -f2'
 
