@@ -3,6 +3,7 @@
     "virtual_env",
     "ssh",
     "cwd",
+	"svn",
     "git",
     "git_stash",
     "jobs",
