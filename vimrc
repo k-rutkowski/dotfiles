@@ -47,12 +47,6 @@ set ff=unix
 set enc=utf-8
 set fileencoding=utf-8
 set fileencodings=ucs-bom,utf8,prc
-"if has("win32")
-"	lang C
-"	set guifont=Consolas:h9:cANSI
-"	set lines=30
-"	set columns=130
-"endif
 
 if exists('+colorcolumn')
 	set colorcolumn=100
@@ -71,10 +65,18 @@ set showmatch
 " -- Behaviour
 set backspace=2
 set hidden
+
 if has("win32")
 	set clipboard=unnamed
 else
 	set clipboard=unnamedplus
+endif
+
+if system('uname -r') =~ "Microsoft"
+	augroup Yank
+		autocmd!
+		autocmd TextYankPost * :call system('/mnt/c/windows/system32/clip.exe ',@")
+	augroup END
 endif
 
 " -- Undo history
@@ -195,11 +197,6 @@ let NERDTreeMinimalUI=1
 nmap <silent><leader>k :NERDTreeToggle<cr>
 nmap <silent><leader>j :NERDTreeFind<cr><leader>w<cr>
 nmap <silent><leader>f :NERDTreeFind<cr>
-
-" -- YouCompleteMe settings
-set completeopt-=preview
-let g:ycm_add_preview_to_completeopt=0
-let g:ycm_collect_identifiers_from_tags_files=1
 
 " -- Toggle Quickfix Window
 nmap <leader>e <Plug>window:quickfix:loop
