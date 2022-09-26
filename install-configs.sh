@@ -15,7 +15,7 @@ cd $dir
 git submodule update --init --recursive
 cd -
 
-backup_dir="$HOME/dotfiles-bckp"
+backup_dir="$HOME/dotfiles-$(date "+%Y-%m-%d-%H%M")"
 files="vimrc vim bash_aliases bash_extra gitconfig tmux.conf tmux-themepack"
 
 ## backup existing dotfiles and create symlinks to new ones
@@ -34,19 +34,17 @@ for fname in $files; do
   ln -s "$dir/$fname" $file
 done
 
-## powerline config
-powerline_dir=$HOME/.config/powerline-shell
-powerline_config_path=$powerline_dir/config.json
-if [[ -e $powerline_config_path ]]; then
-  mkdir -p "$backup_dir/.config/powerline-shell"
-  mv $powerline_config_path "$backup_dir/.config/powerline-shell"
-elif [[ -h $powerline_config_path ]]; then
-  rm $powerline_config_path
-fi
-mkdir -p $powerline_dir
-ln -s "$dir/powerline-shell/config.json" $powerline_config_path
+## todo: install starship
 
-## neovim config
+## todo: z (rust)
+if [[ -e "$HOME/.z.sh" ]]; then
+  mv "$HOME/.z.sh" "$backup_dir/z.sh"
+elif [[ -h "$HOME/.z.sh" ]]; then
+  rm $HOME/.z.sh
+fi
+ln -s "$dir/z/z.sh" "$HOME/.z.sh"
+
+## todo: neovim config
 nvim_config_dir=$HOME/.config/nvim
 nvim_config_path=$nvim_config_dir/init.vim
 if [[ -e $nvim_config_path ]]; then
@@ -58,17 +56,7 @@ fi
 mkdir -p $nvim_config_dir
 ln -s "$dir/nvimrc" $nvim_config_path
 
-## z
-if [[ -e "$HOME/.z.sh" ]]; then
-  mv "$HOME/.z.sh" "$backup_dir/z.sh"
-elif [[ -h "$HOME/.z.sh" ]]; then
-  rm $HOME/.z.sh
-fi
-ln -s "$dir/z/z.sh" "$HOME/.z.sh"
-
 ## install vim plugins
-cd $dir
-vim +PluginInstall +qall
+#cd $dir
+#vim +PluginInstall +qall
 
-#cd vim/bundle/YouCompleteMe
-#python3 install.py --clang-completer
