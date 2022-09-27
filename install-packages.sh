@@ -10,11 +10,17 @@ else
     sudox="sudo"
 fi
 
+## update the OS
 $sudox apt update -y
 $sudox apt dist-upgrade -y
 
+## install the basic stuff
 $sudox apt install -y curl python3 python3-pip git git-doc git-lfs git-man clang-tools clang-tidy clang-format g++ g++-multilib tmux fonts-powerline 
-$sudox apt install -y ttf-mscorefonts-installer
+
+## install some cool tools
+sudo apt install -y zoxide
+
+#$sudox apt install -y ttf-mscorefonts-installer
 $sudox apt autoremove -y
 
 ## neovim 7.2
