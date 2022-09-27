@@ -16,14 +16,14 @@ git submodule update --init --recursive
 cd -
 
 backup_dir="$dir-$(date "+%Y-%m-%d-%H%M")"
-files="vimrc vim bash_aliases bash_extra gitconfig tmux.conf tmux-themepack"
+files="vimrc vim bash_aliases bash_extra gitconfig tmux.conf tmux-themepack config/starship.toml"
 
 ## backup existing dotfiles and create symlinks to new ones
 if [[ -d $backup_dir ]]; then
   rm -rf $backup_dir
 fi
-
-mkdir -p "$backup_dir"
+mkdir -p "$backup_dir/.config"
+mkdir -p "$HOME/.config"
 for fname in $files; do
   file="$HOME/.$fname"
   if [[ -e $file ]]; then
@@ -40,16 +40,6 @@ if ! grep -q "^$import_bash_extra_line\$" "$HOME/.bashrc"; then
   echo -e "\n$import_bash_extra_line\n" >> "$HOME/.bashrc"
 fi
 
-## todo: install starship
-
-## todo: z (rust)
-#  if [[ -e "$HOME/.z.sh" ]]; then
-#    mv "$HOME/.z.sh" "$backup_dir/z.sh"
-#  elif [[ -h "$HOME/.z.sh" ]]; then
-#    rm $HOME/.z.sh
-#  fi
-#  ln -s "$dir/z/z.sh" "$HOME/.z.sh"
- 
 ## todo: neovim config
 #  nvim_config_dir=$HOME/.config/nvim
 #  nvim_config_path=$nvim_config_dir/init.vim
@@ -65,3 +55,8 @@ fi
 ## install vim plugins
 vim +PluginInstall +qall
 
+echo
+echo "-------------------------------------------------"
+echo "Finished! You should probabily restart the shell."
+echo "-------------------------------------------------"
+echo
