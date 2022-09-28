@@ -1,2 +1,0 @@
-1. Add tmux config
-2. Add mappings for vimux

@@ -1,0 +1,4 @@
+1. Add tmux config
+2. Turn shell-help.txt into part of config
+3. Make scripts repo part of this repo
+
