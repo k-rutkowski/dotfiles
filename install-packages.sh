@@ -18,11 +18,10 @@ $sudox apt dist-upgrade -y
 
 ## basic stuff
 echo "Installing core dependencies..."
-$sudox apt install -y curl python3 python3-pip git git-doc git-lfs git-man clang-tools clang-tidy clang-format g++ g++-multilib tmux fonts-powerline nodejs npm
+$sudox apt install -y curl python3 python3-pip git git-doc git-lfs git-man clang-tools clang-tidy clang-format g++ g++-multilib tmux fonts-powerline nodejs npm ripgrep htop
 #$sudox apt install -y ttf-mscorefonts-installer
 
-## some cool tools
-# ???
+## some other tools ?
 
 ## cleanup after installation
 $sudox apt autoremove -y
@@ -45,7 +44,7 @@ source "$HOME/.cargo/env"
 mkdir -p $HOME/.local/share/bash-completion/completions
 rustup completions bash > $HOME/.local/share/bash-completion/completions/rustup
 
-## neovim 7.2
+## neovim 8.0
 echo "Installing neovim..."
 curl -sS -L -O https://github.com/neovim/neovim/releases/download/v0.8.0/nvim-linux64.deb
 $sudox apt install ./nvim-linux64.deb

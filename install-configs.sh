@@ -40,23 +40,21 @@ if ! grep -q "^$import_bash_extra_line\$" "$HOME/.bashrc"; then
   echo -e "\n$import_bash_extra_line\n" >> "$HOME/.bashrc"
 fi
 
-## todo: neovim config
-#  nvim_config_dir=$HOME/.config/nvim
-#  nvim_config_path=$nvim_config_dir/init.vim
-#  if [[ -e $nvim_config_path ]]; then
-#    mkdir -p "$backup_dir/.config/nvim"
-#    mv $nvim_config_path "$backup_dir/.config/nvim"
-#  elif [[ -h $nvim_config_path ]]; then
-#    rm $nvim_config_path
-#  fi
-#  mkdir -p $nvim_config_dir
-#  ln -s "$dir/nvimrc" $nvim_config_path
+## neovim config
+nvim_config=$HOME/.config/nvim
+if [[ -d $nvim_config ]]; then
+  rm -rf $nvim_config
+fi
+git clone https://github.com/AstroNvim/AstroNvim $nvim_config
+mkdir -p $nvim_config/lua
+ln -s "$dir/config/astronvim-user" $nvim_config/lua/user
+nvim  --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync'
 
 ## install vim plugins
 vim +PluginInstall +qall
 
 echo
 echo "-------------------------------------------------"
-echo "Finished! You should probabily restart the shell."
+echo "Finished! You should probably restart the shell."
 echo "-------------------------------------------------"
 echo
