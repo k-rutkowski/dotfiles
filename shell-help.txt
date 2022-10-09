@@ -1,4 +1,0 @@
-# CHANGE DEFAULT EDITOR
-$ update-alternatives --config editor
-
-

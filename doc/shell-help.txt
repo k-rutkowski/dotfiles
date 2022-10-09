@@ -1,0 +1,5 @@
+## CHANGE DEFAULT EDITOR
+$ update-alternatives --help
+
+## https://askubuntu.com/questions/891928/how-can-i-add-my-desired-editor-to-the-update-alternatives-interactive-menu
+## https://thomasventurini.com/articles/how-to-use-update-alternatives/

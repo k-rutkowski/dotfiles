@@ -15,60 +15,53 @@ cd $dir
 git submodule update --init --recursive
 cd -
 
-backup_dir="$HOME/dotfiles-bckp"
-files="vimrc vim bash_aliases bash_extra gitconfig tmux.conf tmux-themepack"
+backup_dir="$dir-$(date "+%Y-%m-%d-%H%M")"
+files="vimrc vim bash_aliases bash_extra tmux.conf tmux-themepack config/starship.toml"
 
 ## backup existing dotfiles and create symlinks to new ones
 if [[ -d $backup_dir ]]; then
   rm -rf $backup_dir
 fi
-
-mkdir -p "$backup_dir"
+mkdir -p "$backup_dir/.config"
+mkdir -p $HOME/.config
 for fname in $files; do
-  file="$HOME/.$fname"
+  file=$HOME/.$fname
   if [[ -e $file ]]; then
-    mv $file "$backup_dir/$fname"
+    mv $file "$backup_dir/.$fname"
   elif [[ -h $file ]]; then
     rm $file
   fi
   ln -s "$dir/$fname" $file
 done
 
-## powerline config
-powerline_dir=$HOME/.config/powerline-shell
-powerline_config_path=$powerline_dir/config.json
-if [[ -e $powerline_config_path ]]; then
-  mkdir -p "$backup_dir/.config/powerline-shell"
-  mv $powerline_config_path "$backup_dir/.config/powerline-shell"
-elif [[ -h $powerline_config_path ]]; then
-  rm $powerline_config_path
+## add extra .bashrc configuration
+import_bash_extra_line='. $HOME/.bash_extra'
+if ! grep -q "^$import_bash_extra_line\$" $HOME/.bashrc; then
+  echo -e "\n$import_bash_extra_line\n" >> $HOME/.bashrc
 fi
-mkdir -p $powerline_dir
-ln -s "$dir/powerline-shell/config.json" $powerline_config_path
+
+## gitconfig 
+import_gitconfig_line="path = $dir/gitconfig"
+touch $HOME/.gitconfig
+if ! grep -q "$import_gitconfig_line" $HOME/.gitconfig; then
+  echo -e "[include]\n\t$import_gitconfig_line" >> $HOME/.gitconfig
+fi
 
 ## neovim config
-nvim_config_dir=$HOME/.config/nvim
-nvim_config_path=$nvim_config_dir/init.vim
-if [[ -e $nvim_config_path ]]; then
-  mkdir -p "$backup_dir/.config/nvim"
-  mv $nvim_config_path "$backup_dir/.config/nvim"
-elif [[ -h $nvim_config_path ]]; then
-  rm $nvim_config_path
+nvim_config=$HOME/.config/nvim
+if [[ -d $nvim_config ]]; then
+  rm -rf $nvim_config
 fi
-mkdir -p $nvim_config_dir
-ln -s "$dir/nvimrc" $nvim_config_path
-
-## z
-if [[ -e "$HOME/.z.sh" ]]; then
-  mv "$HOME/.z.sh" "$backup_dir/z.sh"
-elif [[ -h "$HOME/.z.sh" ]]; then
-  rm $HOME/.z.sh
-fi
-ln -s "$dir/z/z.sh" "$HOME/.z.sh"
+git clone https://github.com/AstroNvim/AstroNvim $nvim_config
+mkdir -p $nvim_config/lua
+ln -s "$dir/config/astronvim-user" $nvim_config/lua/user
+nvim  --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync'
 
 ## install vim plugins
-cd $dir
 vim +PluginInstall +qall
 
-#cd vim/bundle/YouCompleteMe
-#python3 install.py --clang-completer
+echo
+echo "-------------------------------------------------"
+echo "Finished! You should probably restart the shell."
+echo "-------------------------------------------------"
+echo
