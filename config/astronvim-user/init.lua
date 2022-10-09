@@ -1,14 +1,23 @@
+local function show_macro_recording()
+  local reg = vim.fn.reg_recording()
+  if reg == "" then
+    return ""
+  else
+    return "recording @" .. reg
+  end
+end
+
 local config = {
 
   updater = {
-    remote = "origin", -- remote to use
+    remote = "origin",
     channel = "stable", -- "stable" or "nightly"
     version = "latest", -- "latest", tag name, or regex search like "v1.*" to only do updates before v2 (STABLE ONLY)
     branch = "main", -- branch name (NIGHTLY ONLY)
     commit = nil, -- commit hash (NIGHTLY ONLY)
     pin_plugins = nil, -- nil, true, false (nil will pin plugins on stable only)
     skip_prompts = false, -- skip prompts about breaking changes
-    show_changelog = true, -- show the changelog after performing an update
+    show_changelog = true,
     auto_reload = false, -- automatically reload and sync packer after a successful update
     auto_quit = false, -- automatically quit the current session after a successful update
   },
@@ -29,8 +38,8 @@ local config = {
       shortmess = vim.opt.shortmess + { I = true },
       showbreak = "↪ ",
       wrap = true,
-      cmdheight = 1,
-      scrolloff = 3,
+      cmdheight = 0,
+      scrolloff = 2,
       --tabstop = 4,
       --shiftwidth = 4,
       relativenumber = true,
@@ -145,13 +154,15 @@ local config = {
       ["JK"] = { "<esc>", desc = "My Escape" },
     },
     t = {
-      -- ["<esc>"] = false,
       ["<a-n>"] = { "<c-\\><c-n>", desc = "Terminal normal mode" },
       ["<a-q>"] = { "<c-\\><c-n>:q<cr>", desc = "Terminal quit" },
       ["<a-h>"] = { "<c-\\><c-n><c-w>h", desc = "Terminal left window navigation" },
       ["<a-j>"] = { "<c-\\><c-n><c-w>j", desc = "Terminal down window navigation" },
       ["<a-k>"] = { "<c-\\><c-n><c-w>k", desc = "Terminal up window navigation" },
       ["<a-l>"] = { "<c-\\><c-n><c-w>l", desc = "Terminal right window navigation" },
+    },
+    x = {
+      ["<leader>p"] = { "\"_dP", desc = "" },
     },
   },
 
@@ -170,6 +181,29 @@ local config = {
         as = "solarized",
       },
     },
+
+    heirline = function(config)
+      config[1] = {
+        hl = { fg = "fg", bg = "bg" },
+        astronvim.status.component.mode { mode_text = { padding = { left = 1, right = 1 } } },
+        astronvim.status.component.git_branch(),
+        astronvim.status.component.file_info(),
+        astronvim.status.component.git_diff(),
+        astronvim.status.component.diagnostics(),
+        astronvim.status.component.builder {
+          { provider = show_macro_recording },
+          padding = { left = 1, right = 1 },
+        },
+        astronvim.status.component.fill(),
+        astronvim.status.component.lsp(),
+        astronvim.status.component.treesitter(),
+        astronvim.status.component.nav {
+          percentage = { padding = { left = 1, right = 1 } },
+          scrollbar = false,
+        },
+      }
+      return config
+    end,
   },
 
   -- This function is run last and is a good place to configuring
