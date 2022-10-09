@@ -16,16 +16,16 @@ git submodule update --init --recursive
 cd -
 
 backup_dir="$dir-$(date "+%Y-%m-%d-%H%M")"
-files="vimrc vim bash_aliases bash_extra gitconfig tmux.conf tmux-themepack config/starship.toml"
+files="vimrc vim bash_aliases bash_extra tmux.conf tmux-themepack config/starship.toml"
 
 ## backup existing dotfiles and create symlinks to new ones
 if [[ -d $backup_dir ]]; then
   rm -rf $backup_dir
 fi
 mkdir -p "$backup_dir/.config"
-mkdir -p "$HOME/.config"
+mkdir -p $HOME/.config
 for fname in $files; do
-  file="$HOME/.$fname"
+  file=$HOME/.$fname
   if [[ -e $file ]]; then
     mv $file "$backup_dir/.$fname"
   elif [[ -h $file ]]; then
@@ -35,9 +35,16 @@ for fname in $files; do
 done
 
 ## add extra .bashrc configuration
-import_bash_extra_line='. "$HOME/.bash_extra"'
-if ! grep -q "^$import_bash_extra_line\$" "$HOME/.bashrc"; then
-  echo -e "\n$import_bash_extra_line\n" >> "$HOME/.bashrc"
+import_bash_extra_line='. $HOME/.bash_extra'
+if ! grep -q "^$import_bash_extra_line\$" $HOME/.bashrc; then
+  echo -e "\n$import_bash_extra_line\n" >> $HOME/.bashrc
+fi
+
+## gitconfig 
+import_gitconfig_line="path = $dir/gitconfig"
+touch $HOME/.gitconfig
+if ! grep -q "$import_gitconfig_line" $HOME/.gitconfig; then
+  echo -e "[include]\n\t$import_gitconfig_line" >> $HOME/.gitconfig
 fi
 
 ## neovim config
