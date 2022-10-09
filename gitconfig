@@ -24,6 +24,3 @@
 	lg3-specific = log --graph --abbrev-commit --decorate --format=format:'%w(110,0,11)%C(bold blue)%h%C(reset) %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset) %C(bold cyan)(committed: %cD)%C(reset) %C(auto)%d%C(reset)%n''%w(110,10,11)%C(white)%s%C(reset)%n''%w(110,10,12)%C(dim white)- %an <%ae> %C(reset) %C(dim white)(committer: %cn <%ce>)%C(reset)'
 [pull]
 	rebase = true
-[user]
-	email = krzysztof.rutk@gmail.com
-	name = Krzysztof Rutkowski

@@ -14,6 +14,3 @@ alias ports='netstat -tulanp'
 alias su='sudo -i'
 alias x='exit'
 
-alias svn-url='svn info | grep "^Repository Root:" | cut -d" " -f3'
-alias svn-path='svn info | grep "^URL:" | cut -d" " -f2'
-

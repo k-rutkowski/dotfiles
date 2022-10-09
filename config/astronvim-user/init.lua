@@ -100,6 +100,7 @@ local config = {
 
   mappings = {
     n = {
+      -- basic
       ["\\"] = { ";", desc = "" },
       [";"] = { ":", desc = "" },
       ["go"] = { "o<esc>k" },
@@ -109,6 +110,7 @@ local config = {
       ["-"] = { "<C-x>", desc = "Decrement number" },
       ["="] = { "<C-a>", desc = "Increment number" },
 
+      -- window management
       ["<a-h>"] = { function() require("smart-splits").move_cursor_left() end, desc = "Move to left split" },
       ["<a-j>"] = { function() require("smart-splits").move_cursor_down() end, desc = "Move to below split" },
       ["<a-k>"] = { function() require("smart-splits").move_cursor_up() end, desc = "Move to above split" },
@@ -120,6 +122,11 @@ local config = {
       ["<left>"] = { function() require("smart-splits").resize_left(2) end, desc = "Resize split left" },
       ["<right>"] = { function() require("smart-splits").resize_right(2) end, desc = "Resize split right" },
 
+      -- neotree
+      ["<leader>b"] = { "<cmd>Neotree source=buffers toggle<cr>", desc = "Toggle Buffers" },
+      ["<leader>i"] = { "<cmd>Neotree source=git_status toggle<cr>", desc = "Toggle Git panel" },
+
+      -- terminal
       ["<leader>\\"] = { "<cmd>ToggleTerm direction=float<cr>", desc = "Show floating terminal" },
       ["<leader>|"] = { "<cmd>ToggleTerm direction=horizontal size=12<cr>", desc = "Show terminal at the bottom" },
     },
