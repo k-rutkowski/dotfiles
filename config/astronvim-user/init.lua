@@ -18,19 +18,33 @@ local config = {
 
   options = {
     opt = {
+      conceallevel = 2,
+      foldenable = false,
+      foldexpr = "nvim_treesitter#foldexpr()",
+      foldmethod = "expr",
+
+      linebreak = true,
+      list = true,
+      listchars = { tab = "│→", extends = "⟩", precedes = "⟨", trail = "·", nbsp = "␣" },
+      shortmess = vim.opt.shortmess + { I = true },
+      showbreak = "↪ ",
+      wrap = true,
       cmdheight = 1,
-      relativenumber = true, -- sets vim.opt.relativenumber
-      number = true, -- sets vim.opt.number
-      spell = true, -- sets vim.opt.spell
-      signcolumn = "yes", -- sets vim.opt.signcolumn to auto
-      wrap = false, -- sets vim.opt.wrap
+      scrolloff = 3,
+      --tabstop = 4,
+      --shiftwidth = 4,
+      relativenumber = true,
+      number = true,
+      spell = true,
+      signcolumn = "yes",
     },
     g = {
-      mapleader = " ", -- sets vim.g.mapleader
-      cmp_enabled = true, -- enable completion at start
-      autopairs_enabled = true, -- enable autopairs at start
-      diagnostics_enabled = true, -- enable diagnostics at start
-      status_diagnostics_enabled = true, -- enable diagnostics in statusline
+      -- colorcolumn = 80,
+      mapleader = " ",
+      cmp_enabled = true,
+      autopairs_enabled = true,
+      diagnostics_enabled = true,
+      status_diagnostics_enabled = true,
       solarized_termtrans = 1,
       solarized_visibility = 'normal',
       solarized_statusline = 'normal',
@@ -86,24 +100,51 @@ local config = {
 
   mappings = {
     n = {
-      -- ["<leader>bb"] = { "<cmd>tabnew<cr>", desc = "New tab" },
-      -- ["<leader>bc"] = { "<cmd>BufferLinePickClose<cr>", desc = "Pick to close" },
-      -- ["<leader>bj"] = { "<cmd>BufferLinePick<cr>", desc = "Pick to jump" },
-      -- ["<leader>bt"] = { "<cmd>BufferLineSortByTabs<cr>", desc = "Sort by tabs" },
-      ["\\"] = { ";", desc = "Colon replacement" },
-      [";"] = { ":", desc = "Colon replacement" },
+      ["\\"] = { ";", desc = "" },
+      [";"] = { ":", desc = "" },
+      ["go"] = { "o<esc>k" },
+      ["gO"] = { "O<esc>j" },
+      j = { "gj", desc = "Navigate down" },
+      k = { "gk", desc = "Navigate down" },
+      ["-"] = { "<C-x>", desc = "Decrement number" },
+      ["="] = { "<C-a>", desc = "Increment number" },
+
+      ["<a-h>"] = { function() require("smart-splits").move_cursor_left() end, desc = "Move to left split" },
+      ["<a-j>"] = { function() require("smart-splits").move_cursor_down() end, desc = "Move to below split" },
+      ["<a-k>"] = { function() require("smart-splits").move_cursor_up() end, desc = "Move to above split" },
+      ["<a-l>"] = { function() require("smart-splits").move_cursor_right() end, desc = "Move to right split" },
+      ["|"] = { "<cmd>vsplit<cr>", desc = "Vertical split" },
+      ["<a-\\>"] = { "<cmd>split<cr>", desc = "Horizontal split" },
+      ["<up>"] = { function() require("smart-splits").resize_up(2) end, desc = "Resize split up" },
+      ["<down>"] = { function() require("smart-splits").resize_down(2) end, desc = "Resize split down" },
+      ["<left>"] = { function() require("smart-splits").resize_left(2) end, desc = "Resize split left" },
+      ["<right>"] = { function() require("smart-splits").resize_right(2) end, desc = "Resize split right" },
+
+      ["<leader>\\"] = { "<cmd>ToggleTerm direction=float<cr>", desc = "Show floating terminal" },
+      ["<leader>|"] = { "<cmd>ToggleTerm direction=horizontal size=12<cr>", desc = "Show terminal at the bottom" },
     },
     v = {
-      ["\\"] = { ";", desc = "Colon replacement" },
-      [";"] = { ":", desc = "Colon replacement" },
+      ["\\"] = { ";", desc = "" },
+      [";"] = { ":", desc = "" },
+      j = { "gj", desc = "Navigate down" },
+      k = { "gk", desc = "Navigate down" },
+      ["-"] = { "<c-x>", desc = "Decrement numbers" },
+      ["="] = { "<c-a>", desc = "Increment numbers" },
+      ["_"] = { "g<c-x>", desc = "Decrement numbers" },
+      ["+"] = { "g<c-a>", desc = "Increment numbers" },
     },
     i = {
       ["jk"] = { "<esc>", desc = "My Escape" },
       ["JK"] = { "<esc>", desc = "My Escape" },
     },
     t = {
-      -- setting a mapping to false will disable it
       -- ["<esc>"] = false,
+      ["<a-n>"] = { "<c-\\><c-n>", desc = "Terminal normal mode" },
+      ["<a-q>"] = { "<c-\\><c-n>:q<cr>", desc = "Terminal quit" },
+      ["<a-h>"] = { "<c-\\><c-n><c-w>h", desc = "Terminal left window navigation" },
+      ["<a-j>"] = { "<c-\\><c-n><c-w>j", desc = "Terminal down window navigation" },
+      ["<a-k>"] = { "<c-\\><c-n><c-w>k", desc = "Terminal up window navigation" },
+      ["<a-l>"] = { "<c-\\><c-n><c-w>l", desc = "Terminal right window navigation" },
     },
   },
 

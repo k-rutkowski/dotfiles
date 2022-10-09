@@ -16,12 +16,11 @@ echo "Updating system..."
 $sudox apt update -y
 $sudox apt dist-upgrade -y
 
-## basic stuff
+## install stuff from distro repository
 echo "Installing core dependencies..."
-$sudox apt install -y curl python3 python3-pip git git-doc git-lfs git-man clang-tools clang-tidy clang-format g++ g++-multilib tmux fonts-powerline nodejs npm ripgrep htop
-#$sudox apt install -y ttf-mscorefonts-installer
+$sudox apt install -y curl python3 python3-pip git git-doc git-lfs git-man clang-tools clang-tidy clang-format g++ g++-multilib tmux fonts-powerline nodejs npm htop ripgrep rename
 
-## some other tools ?
+#$sudox apt install -y ttf-mscorefonts-installer
 
 ## cleanup after installation
 $sudox apt autoremove -y
