@@ -49,10 +49,6 @@ curl -sS -L -O https://github.com/neovim/neovim/releases/download/v0.8.0/nvim-li
 $sudox apt install ./nvim-linux64.deb
 rm ./nvim-linux64.deb
 
-## neovim config template
-echo "Installing LunarVim..."
-bash <(curl -sS https://raw.githubusercontent.com/lunarvim/lunarvim/master/utils/installer/install.sh) -y --no-install-dependencies
-
 echo
 echo "-------------------------------------------------"
 echo "Finished! You should probabily restart the shell."
