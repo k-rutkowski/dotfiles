@@ -116,6 +116,7 @@ local config = {
 		n = {
 			-- basic
 			["\\"] = { ";", desc = "" },
+			["g\\"] = { "g;", desc = "Jump to next change" },
 			[";"] = { ":", desc = "" },
 			["go"] = { "o<esc>k" },
 			["gO"] = { "O<esc>j" },
@@ -123,6 +124,8 @@ local config = {
 			k = { "gk", desc = "Navigate down" },
 			["-"] = { "<c-x>", desc = "Decrement number" },
 			["="] = { "<c-a>", desc = "Increment number" },
+			["'"] = { "`", desc = "Go to mark (exact)" },
+			["g'"] = { "g`", desc = "Go to mark (exact w/o changing jump list)" },
 
 			-- window management
 			["<a-h>"] = { function() require("smart-splits").move_cursor_left() end, desc = "Move to left split" },
@@ -130,7 +133,7 @@ local config = {
 			["<a-k>"] = { function() require("smart-splits").move_cursor_up() end, desc = "Move to above split" },
 			["<a-l>"] = { function() require("smart-splits").move_cursor_right() end, desc = "Move to right split" },
 			["|"] = { "<cmd>vsplit<cr>", desc = "Vertical split" },
-			["<a-\\>"] = { "<cmd>split<cr>", desc = "Horizontal split" },
+			["_"] = { "<cmd>split<cr>", desc = "Horizontal split" },
 			["<up>"] = { function() require("smart-splits").resize_up(2) end, desc = "Resize split up" },
 			["<down>"] = { function() require("smart-splits").resize_down(2) end, desc = "Resize split down" },
 			["<left>"] = { function() require("smart-splits").resize_left(2) end, desc = "Resize split left" },
@@ -161,6 +164,9 @@ local config = {
 			["jk"] = { "<esc>", desc = "My Escape" },
 			["JK"] = { "<esc>", desc = "My Escape" },
 		},
+		x = {
+			["<leader>p"] = { "\"_dP", desc = "" },
+		},
 		t = {
 			["<a-n>"] = { "<c-\\><c-n>", desc = "Terminal normal mode" },
 			["<a-q>"] = { "<c-\\><c-n>:q<cr>", desc = "Terminal quit" },
@@ -168,9 +174,6 @@ local config = {
 			["<a-j>"] = { "<c-\\><c-n><c-w>j", desc = "Terminal down window navigation" },
 			["<a-k>"] = { "<c-\\><c-n><c-w>k", desc = "Terminal up window navigation" },
 			["<a-l>"] = { "<c-\\><c-n><c-w>l", desc = "Terminal right window navigation" },
-		},
-		x = {
-			["<leader>p"] = { "\"_dP", desc = "" },
 		},
 	},
 
