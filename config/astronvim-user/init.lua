@@ -218,7 +218,31 @@ local config = {
 				end,
 				run = ":Neorg sync-parsers",
 				requires = "nvim-lua/plenary.nvim",
-			}
+			},
+			{
+				'TimUntersberger/neogit',
+				config = function()
+					require('neogit').setup {}
+				end,
+				requires = 'nvim-lua/plenary.nvim',
+			},
+			{
+				"jackMort/ChatGPT.nvim",
+				config = function()
+					require('chatgpt').setup {
+						yank_register = '"',
+						openai_params = {
+							model = "text-davinci-003",
+							max_tokens = 4000,
+						},
+					}
+				end,
+				requires = {
+					"MunifTanjim/nui.nvim",
+					"nvim-lua/plenary.nvim",
+					"nvim-telescope/telescope.nvim",
+				},
+			},
 		},
 
 		heirline = function(config)
