@@ -149,6 +149,8 @@ local config = {
 
 			-- open user config
 			["<leader>rc"] = { "<cmd>edit ~/.config/nvim/lua/user/init.lua<cr>", desc = "Open configuration file" },
+			["<leader>no"] = { "<cmd>:Neorg index<cr>", desc = "Open notes (neorg)" },
+			["<leader>nq"] = { "<cmd>:Neorg return<cr>", desc = "Close notes (neorg)" },
 		},
 		v = {
 			["\\"] = { ";", desc = "" },
@@ -194,7 +196,7 @@ local config = {
 			},
 			{
 				"nvim-neorg/neorg",
-				tag = "*",
+				-- tag = "*",
 				ft = "norg",
 				after = "nvim-treesitter",
 				config = function()
@@ -207,6 +209,8 @@ local config = {
 									workspaces = {
 										notes = "~/notes",
 									},
+									default_workspace = "notes",
+									open_last_workspace = true,
 								},
 							},
 						},

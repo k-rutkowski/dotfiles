@@ -1,3 +1,8 @@
+alias ls='exa'
+alias cat='bat'
+alias du='dust'
+alias cd='z'
+
 alias c='clear'
 alias ll='ls -alFh'
 alias la='ls -AF'

@@ -29,6 +29,9 @@ $cmd_duration\
 
 continuation_prompt = "[ »»» ](fg:#F0F070)"
 
+scan_timeout = 100
+command_timeout = 8000
+
 # Disable the blank line at the start of the prompt
 add_newline = false
 
