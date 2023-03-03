@@ -40,8 +40,8 @@ rustup completions bash > $HOME/.local/share/bash-completion/completions/rustup
 ## better cd
 bash <(curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh)
 
-## starship prompt, better ls, better cat, better grep, better du, terminal multiplexer
-cargo install starship exa bat ripgrep du-dust zellij
+## starship prompt, better ls, better cat, better grep, better du, better git diff, terminal multiplexer
+cargo install starship exa bat ripgrep du-dust git-delta zellij
 
 ## neovim 8.0
 echo "Installing neovim..."

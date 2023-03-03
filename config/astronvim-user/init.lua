@@ -220,11 +220,25 @@ local config = {
 				requires = "nvim-lua/plenary.nvim",
 			},
 			{
-				'TimUntersberger/neogit',
+				'sindrets/diffview.nvim',
 				config = function()
-					require('neogit').setup {}
+					require('diffview').setup {}
 				end,
 				requires = 'nvim-lua/plenary.nvim',
+			},
+			{
+				'TimUntersberger/neogit',
+				config = function()
+					require('neogit').setup {
+						integrations = {
+							diffview = true,
+						},
+					}
+				end,
+				requires = {
+					'nvim-lua/plenary.nvim',
+					'sindrets/diffview.nvim',
+				},
 			},
 			{
 				"jackMort/ChatGPT.nvim",
