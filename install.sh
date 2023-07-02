@@ -161,12 +161,12 @@ install_fonts() {
 
 	## download and install Nerd fonts
 	local fonts="CascadiaCode JetBrainsMono"
+	$run mkdir -p  "$HOME/.local/share/fonts"
 	for font in $fonts; do
 		$run rm -fr "/tmp/$font" "/tmp/$font.zip"
 		$run curl -sS -L -o "/tmp/$font.zip" "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/$font.zip"
 		$run unzip "/tmp/$font.zip" -d "/tmp/$font"
-		$run mkdir -p  "$HOME/.local/share/fonts"
-		$run cp -f "/tmp/$font/*.ttf" "$HOME/.local/share/fonts/"
+		$run cp -f /tmp/$font/*.ttf $HOME/.local/share/fonts/
 		$run rm -fr "/tmp/$font" "/tmp/$font.zip"
 	done
 
