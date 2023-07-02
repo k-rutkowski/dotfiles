@@ -86,7 +86,7 @@ install_cli_tools() {
 	## apt packages
 	get_sudo
 	echo "> core packages..."
-	$run $sudox apt install -y git git-doc git-lfs git-man python3 python3-pip vim curl clang-tools clang-tidy clang-format g++ g++-multilib cmake nodejs npm net-tools htop rename tmux
+	$run $sudox apt install -y git git-doc git-lfs git-man python3 python3-pip python-is-python3 vim curl clang-tools clang-tidy clang-format g++ g++-multilib cmake nodejs npm net-tools htop rename tmux ranger p7zip-full imagemagick
 	$run $sudox apt autoremove -y
 
 	## make sure a directory for bash completions exists
@@ -121,36 +121,61 @@ install_cli_tools() {
 	echo "> neovim (with bob version manager)..."
 	$run cargo install bob-nvim
 	$run bob complete bash >> "$bash_completions_dir/bob"
-	$run bob install nightly
+	$run bob use nightly
 	## neovim 
 	#echo "> neovim..."
 	#$run curl -sS -L -o /tmp/nvim-linux64.deb https://github.com/neovim/neovim/releases/download/v0.8.3/nvim-linux64.deb
 	#$run $sudox apt install /tmp/nvim-linux64.deb
 	#$run rm /tmp/nvim-linux64.deb
+	
+	## make vim the default editor
+	$run $sudox update-alternatives --set editor "$(which vim.basic)"
 }
 
 install_gui_tools() {
 	get_sudo
 
-	## window manager
-	$run $sudox apt install -y i3
+	## window manager, terminal emulator
+	$run $sudox apt install -y i3 polybar feh kitty
+
+	## requirement for image preview in ranger
+	$run pip install Pillow
+
+	## make kitty the default terminal
+	$run $sudox update-alternatives --set x-terminal-emulator "$(which kitty)"
 
 	# todo
-	echo "> nothing yet"
-	## email client, spotify, slack
+	## email client, spotify, slack, camera/mic input enhancement
 }
 
 install_fonts() {
 	get_sudo
- 	$run $sudox apt install -y fonts-powerline ttf-mscorefonts-installer
+
+	## accept mscorefonts eula
+	echo ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true | $run $sudox debconf-set-selections
+	echo ttf-mscorefonts-installer msttcorefonts/present-mscorefonts-eula note | $run $sudox debconf-set-selections
+
+	## install microsoft fonts
+	$run $sudox apt install -y ttf-mscorefonts-installer
 	$run $sudox apt autoremove -y
 
-	# todo
+	## download and install Nerd fonts
+	local fonts="CascadiaCode JetBrainsMono"
+	for font in $fonts; do
+		$run rm -fr "/tmp/$font" "/tmp/$font.zip"
+		$run curl -sS -L -o "/tmp/$font.zip" "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/$font.zip"
+		$run unzip "/tmp/$font.zip" -d "/tmp/$font"
+		$run mkdir -p  "$HOME/.local/share/fonts"
+		$run cp -f "/tmp/$font/*.ttf" "$HOME/.local/share/fonts/"
+		$run rm -fr "/tmp/$font" "/tmp/$font.zip"
+	done
+
+	$run fc-cache -fr
 }
 
-copy_configs() {
+install_configs() {
 	local dir=$(print_dotfiles_dir)
-	local files="vimrc vim bash_aliases bash_extra tmux.conf tmux-themepack config/starship.toml"
+	local files="vimrc vim bash_aliases bash_extra tmux.conf tmux-themepack config/starship.toml config/ranger/rc.config"
 	local backup_dir="$dir-$(date "+%Y-%m-%d-%H%M")"
 
 	## pull submodules
@@ -163,8 +188,8 @@ copy_configs() {
 	if [[ -d $backup_dir ]]; then
 		$run rm -rf $backup_dir
 	fi
-	$run mkdir -p "$backup_dir/.config"
-	$run mkdir -p $HOME/.config
+	$run mkdir -p "$backup_dir/.config/ranger"
+	$run mkdir -p $HOME/.config/ranger
 	for fname in $files; do
 		file=$HOME/.$fname
 		if [[ -e $file ]]; then
@@ -178,14 +203,22 @@ copy_configs() {
 	## add extra .bashrc configuration
 	local import_bash_extra_line='. $HOME/.bash_extra'
 	if ! grep -q "^$import_bash_extra_line\$" $HOME/.bashrc; then
-		$run echo -e "\n$import_bash_extra_line\n" >> $HOME/.bashrc
+		if [[ -z "$run" ]]; then
+			echo -e "\n$import_bash_extra_line\n" >> $HOME/.bashrc
+		else
+			$run echo -e "\n$import_bash_extra_line\n" ">>" $HOME/.bashrc
+		fi
 	fi
 
 	## gitconfig 
 	local import_gitconfig_line="path = $dir/gitconfig"
 	$run touch $HOME/.gitconfig
 	if ! grep -q "$import_gitconfig_line" $HOME/.gitconfig; then
-		$run echo -e "[include]\n\t$import_gitconfig_line" >> $HOME/.gitconfig
+		if [[ -z "$run" ]]; then
+			echo -e "[include]\n\t$import_gitconfig_line" >> $HOME/.gitconfig
+		else
+			$run echo -e "[include]\n\t$import_gitconfig_line" ">>" $HOME/.gitconfig
+		fi
 	fi
 
 	## neovim config
@@ -198,7 +231,11 @@ copy_configs() {
 	$run ln -s "$dir/config/astronvim-user" $nvim_config/lua/user
 }
 
-refresh_nvim() {
+refresh_vim() {
+	## vim
+	$run vim +PluginInstall +qall
+
+	## neovim
 	$run nvim  --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync'
 }
 
@@ -353,13 +390,13 @@ main() {
 
 	if [[ $need_config -eq 1 ]]; then
 		echo "--- Copying config files -----------------------------------"
-		copy_configs
+		install_configs
 		echo ""
 	fi
 
 	if [[ $need_refresh_vim -eq 1 ]]; then
 		echo "--- Preparing neovim ---------------------------------------"
-		refresh_nvim
+		refresh_vim
 		echo ""
 	fi
 }
