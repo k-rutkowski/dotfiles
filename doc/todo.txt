@@ -1,6 +1,0 @@
-1. Add tmux config
-2. Turn shell-help.txt into part of config
-3. Make scripts repo part of this repo
-4. nvim: test and improve clipboard management (with tmux and over ssh)
-5. nvim: split configuration into multiple files
-6. nvim: checkhealth: deal with issues and update install scripts
