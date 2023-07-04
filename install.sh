@@ -1,4 +1,5 @@
 #!/bin/bash
+#
 script_name=$0
 run=""
 sudox=""
@@ -120,13 +121,12 @@ install_cli_tools() {
 	## neovim version manager
 	echo "> neovim (with bob version manager)..."
 	$run cargo install bob-nvim
-	$run bob complete bash >> "$bash_completions_dir/bob"
+	if [[ -z "$run" ]]; then
+		bob complete bash >> "$bash_completions_dir/bob"
+	else
+		$run bob complete bash ">>" "$bash_completions_dir/bob"
+	fi
 	$run bob use nightly
-	## neovim 
-	#echo "> neovim..."
-	#$run curl -sS -L -o /tmp/nvim-linux64.deb https://github.com/neovim/neovim/releases/download/v0.8.3/nvim-linux64.deb
-	#$run $sudox apt install /tmp/nvim-linux64.deb
-	#$run rm /tmp/nvim-linux64.deb
 	
 	## make vim the default editor
 	$run $sudox update-alternatives --set editor "$(which vim.basic)"
