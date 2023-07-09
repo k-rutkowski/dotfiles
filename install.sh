@@ -171,7 +171,7 @@ install_fonts() {
 
 install_configs() {
 	local dir=$(print_dotfiles_dir)
-	local files="vimrc vim bash_aliases bash_extra tmux.conf tmux-themepack config/starship.toml config/ranger/rc.config"
+	local files="vimrc vim bash_aliases bash_extra tmux.conf tmux-themepack config/nvim config/starship.toml config/ranger/rc.config"
 	local backup_dir="$dir-$(date "+%Y-%m-%d-%H%M")"
 
 	## pull submodules
@@ -216,15 +216,6 @@ install_configs() {
 			$run echo -e "[include]\n\t$import_gitconfig_line" ">>" $HOME/.gitconfig
 		fi
 	fi
-
-	## neovim config
-	local nvim_config=$HOME/.config/nvim
-	if [[ -d $nvim_config ]]; then
-		$run rm -rf $nvim_config
-	fi
-	$run git clone https://github.com/AstroNvim/AstroNvim $nvim_config
-	$run mkdir -p $nvim_config/lua
-	$run ln -s "$dir/config/astronvim-user" $nvim_config/lua/user
 }
 
 ################################################################################
