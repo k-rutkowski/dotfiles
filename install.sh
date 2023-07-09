@@ -1,5 +1,5 @@
 #!/bin/bash
-#
+
 script_name=$0
 run=""
 sudox=""
@@ -17,8 +17,6 @@ fi
 echoerr() { printf "%s%s%s\n" "$print_style_error" "$*" "$print_style_reset"; }
 mockrun() { printf "%s%s%s\n" "$print_style_mock" "$*" "$print_style_reset"; }
 
-#var sudo
-
 help() {
 	echo "USAGE: $script_name [OPTION...]"
 	echo
@@ -31,14 +29,12 @@ help() {
 	echo "  --gui               install gui programs"
 	echo "  --fonts             install fonts"
 	echo "  --config            install user settings in \$HOME"
-	echo "  --refresh-vim       prepare neovim (sync plugins)"
 	echo ""
 	echo "EXCLUDE OPTIONS"
 	echo "  --no-cli            skip installing cli toos"
 	echo "  --no-gui            skip installing gui programs"
 	echo "  --no-fonts          skip installing fonts"
 	echo "  --no-config         skip installing user config files"
-	echo "  --no-refresh-vim    skip neovim sync"
 	echo ""
 	echo "TESTING OPTIONS"
 	echo "  --mock              don't do anything, just print the steps"
@@ -87,7 +83,7 @@ install_cli_tools() {
 	## apt packages
 	get_sudo
 	echo "> core packages..."
-	$run $sudox apt install -y git git-doc git-lfs git-man python3 python3-pip python-is-python3 vim curl clang-tools clang-tidy clang-format g++ g++-multilib cmake nodejs npm net-tools htop rename tmux ranger p7zip-full imagemagick
+	$run $sudox apt install -y git git-doc git-lfs git-man python3 python3-pip python3-venv python-is-python3 vim curl clang-tools clang-tidy clang-format g++ g++-multilib cmake nodejs npm net-tools htop rename tmux ranger p7zip-full imagemagick
 	$run $sudox apt autoremove -y
 
 	## make sure a directory for bash completions exists
@@ -231,15 +227,6 @@ install_configs() {
 	$run ln -s "$dir/config/astronvim-user" $nvim_config/lua/user
 }
 
-refresh_vim() {
-	## vim
-	$run vim +PluginInstall +qall
-
-	## neovim
-	$run nvim  --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync'
-}
-
-
 ################################################################################
 
 error=""
@@ -249,7 +236,6 @@ need_install_cli=0
 need_install_gui=0
 need_install_fonts=0
 need_config=0
-need_refresh_vim=0
 
 parse_args() {
 	if [[ $# -eq 0 ]]; then
@@ -261,7 +247,6 @@ parse_args() {
 	local no_install_gui=0
 	local no_install_fonts=0
 	local no_config=0
-	local no_refresh_vim=0
 
 	while [[ $# -gt 0 ]]; do
 		case $1 in
@@ -306,21 +291,11 @@ parse_args() {
 				shift
 				;;
 
-			--refresh-vim)
-				need_refresh_vim=1
-				shift
-				;;
-			--no-refresh-vim)
-				no_refresh_vim=1
-				shift
-				;;
-
 			-a|--all)
 				need_install_cli=1
 				need_install_gui=1
 				need_install_fonts=1
 				need_config=1
-				need_refresh_vim=1
 				shift
 				;;
 
@@ -341,7 +316,6 @@ parse_args() {
 	need_install_gui=$(($need_install_gui-$no_install_gui))
 	need_install_fonts=$(($need_install_fonts-$no_install_fonts))
 	need_config=$(($need_config-$no_config))
-	need_refresh_vim=$(($need_refresh_vim-$no_refresh_vim))
 
 	if [[ $need_install_cli -eq 1 || $need_install_gui -eq 1 || $need_install_fonts -eq 1 ]]; then
 		need_update_os=1
@@ -391,12 +365,6 @@ main() {
 	if [[ $need_config -eq 1 ]]; then
 		echo "--- Copying config files -----------------------------------"
 		install_configs
-		echo ""
-	fi
-
-	if [[ $need_refresh_vim -eq 1 ]]; then
-		echo "--- Preparing neovim ---------------------------------------"
-		refresh_vim
 		echo ""
 	fi
 }
