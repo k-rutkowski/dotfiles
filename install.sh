@@ -171,7 +171,7 @@ install_fonts() {
 
 install_configs() {
 	local dir=$(print_dotfiles_dir)
-	local files="vimrc vim bash_aliases bash_extra tmux.conf tmux-themepack config/nvim config/starship.toml config/ranger/rc.config"
+	local files="vimrc vim bash_aliases bash_extra tmux.conf tmux-themepack config/nvim config/i3 config/starship.toml config/ranger/rc.config"
 	local backup_dir="$dir-$(date "+%Y-%m-%d-%H%M")"
 
 	## pull submodules
