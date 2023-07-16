@@ -83,7 +83,7 @@ install_cli_tools() {
 	## apt packages
 	get_sudo
 	echo "> core packages..."
-	$run $sudox apt install -y git git-doc git-lfs git-man python3 python3-pip python3-venv python-is-python3 vim curl clang-tools clang-tidy clang-format g++ g++-multilib cmake nodejs npm net-tools htop rename tmux ranger p7zip-full imagemagick
+	$run $sudox apt install -y git git-doc git-lfs git-man python3 python3-pip python3-venv python-is-python3 vim curl clang-tools clang-tidy clang-format g++ g++-multilib cmake nodejs npm net-tools htop rename tmux ranger p7zip-full imagemagick wifi-qr
 	$run $sudox apt autoremove -y
 
 	## make sure a directory for bash completions exists
@@ -132,7 +132,7 @@ install_gui_tools() {
 	get_sudo
 
 	## window manager, terminal emulator
-	$run $sudox apt install -y i3 polybar feh kitty pavucontrol lxappearance
+	$run $sudox apt install -y i3 polybar rofi kitty pavucontrol lxappearance nitrogen papirus-icon-theme
 
 	## some useful tools
 	$run $sudox apt install -y qutebrowser
@@ -150,7 +150,7 @@ install_gui_tools() {
 	$run $sudox update-alternatives --set x-terminal-emulator "$(which kitty)"
 
 	# todo
-	## email client, spotify, slack, camera/mic input enhancement
+	## email client, spotify, slack
 
 	## stuff from flathub
 	#$run flatpak install spotify
@@ -183,7 +183,7 @@ install_fonts() {
 
 install_configs() {
 	local dir=$(print_dotfiles_dir)
-	local files="vimrc vim bash_aliases bash_extra tmux.conf tmux-themepack config/nvim config/i3 config/polybar config/starship.toml config/ranger/rc.config"
+	local files="vimrc vim bash_aliases bash_extra tmux.conf tmux-themepack bin config/nvim config/i3 config/polybar config/rofi config/picom config/starship.toml config/ranger/rc.config"
 	local backup_dir="$dir-$(date "+%Y-%m-%d-%H%M")"
 
 	## pull submodules
