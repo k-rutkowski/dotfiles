@@ -1,0 +1,83 @@
+/*
+ *	 ______     __   __   __     __        
+ *	/\  ___\   /\ \ / /  /\ \   /\ \       
+ *	\ \  __\   \ \ \'/   \ \ \  \ \ \____  
+ *	 \ \_____\  \ \__|    \ \_\  \ \_____\ 
+ *	  \/_____/   \/_/      \/_/   \/_____/
+*/
+
+* {
+    bg: #1e1e2e66;
+    bg-alt: #585b7066;
+    bg-selected: #31324466;
+
+    fg: #cdd6f4;
+    fg-alt: #7f849c;
+
+    background-color: @bg;
+
+    border: 0;
+    margin: 0;
+    padding: 0;
+    spacing: 0;
+}
+
+window {
+    width: 32%;
+}
+
+element {
+    padding: 2 3;
+    background-color: transparent;
+    text-color: @fg-alt;
+}
+
+element selected {
+    text-color: @fg;
+    background-color: @bg-selected;
+}
+
+element-text {
+    background-color: transparent;
+    text-color: inherit;
+    vertical-align: 0.5;
+}
+
+element-icon {
+    size: 14;
+    padding: 0 3 0 0;
+    background-color: transparent;
+}
+
+entry {
+    padding: 2;
+    background-color: @bg-alt;
+    text-color: @fg;
+}
+
+inputbar {
+    children: [prompt, entry];
+    background-color: @bg;
+}
+
+listview {
+    background-color: @bg;
+    columns: 1;
+    lines: 12;
+}
+
+mainbox {
+    children: [inputbar,  listview];
+    background-color: @bg;
+}
+
+prompt {
+    enabled: true;
+    padding: 2 0 0 2;
+    background-color: @bg-alt;
+    text-color: @fg;
+}
+
+/*
+    vim: ft=sass
+*/
