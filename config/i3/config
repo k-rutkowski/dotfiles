@@ -5,7 +5,7 @@ set $mod Mod1
 set $sup Mod4
 
 # Configure border style <normal|1pixel|pixel xx|none|pixel>
-new_window pixel 2
+new_window pixel 1
 new_float normal
 
 # Hide  borders
@@ -54,7 +54,7 @@ bindsym XF86AudioPrev exec playerctl previous
 
 # change borders
 bindsym $mod+u border none
-bindsym $mod+y border pixel 2
+bindsym $mod+y border pixel 1
 bindsym $mod+n border normal
 
 # use Mouse+$mod to drag floating windows to their wanted position
@@ -203,7 +203,8 @@ bindsym Mod1+Ctrl+u exec ~/.bin/unmount-encrypted-disks.sh
 
 # colors
 ## class                border  backgr. text    indica. child-border
-client.focused          #a65d0e #a65d0e #fbf1c7 #a65d0e #a65d0e
+client.focused          #638578 #638578 #fbf1c7 #638578 #638578
+#client.focused          #a65d0e #a65d0e #fbf1c7 #a65d0e #a65d0e
 client.focused_inactive #282828 #282828 #fbf1c7 #282828 #282828
 client.unfocused        #282828 #282828 #fbf1c7 #282828 #282828
 client.urgent           #2f343a #900000 #eeeeee #900000 #900000
