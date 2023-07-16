@@ -132,16 +132,28 @@ install_gui_tools() {
 	get_sudo
 
 	## window manager, terminal emulator
-	$run $sudox apt install -y i3 polybar feh kitty
+	$run $sudox apt install -y i3 polybar feh kitty pavucontrol lxappearance
+
+	## some useful tools
+	$run $sudox apt install -y qutebrowser
+
+	## multimedia
+	$run $sudox apt install -y vlc smplayer
 
 	## requirement for image preview in ranger
 	$run pip install Pillow
+
+	## ad blocker for qutebrowser
+	$run pip install adblock
 
 	## make kitty the default terminal
 	$run $sudox update-alternatives --set x-terminal-emulator "$(which kitty)"
 
 	# todo
 	## email client, spotify, slack, camera/mic input enhancement
+
+	## stuff from flathub
+	#$run flatpak install spotify
 }
 
 install_fonts() {
@@ -171,7 +183,7 @@ install_fonts() {
 
 install_configs() {
 	local dir=$(print_dotfiles_dir)
-	local files="vimrc vim bash_aliases bash_extra tmux.conf tmux-themepack config/nvim config/i3 config/starship.toml config/ranger/rc.config"
+	local files="vimrc vim bash_aliases bash_extra tmux.conf tmux-themepack config/nvim config/i3 config/polybar config/starship.toml config/ranger/rc.config"
 	local backup_dir="$dir-$(date "+%Y-%m-%d-%H%M")"
 
 	## pull submodules
