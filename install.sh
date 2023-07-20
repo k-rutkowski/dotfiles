@@ -222,7 +222,7 @@ update_sudoers() {
 
 install_configs() {
 	local dir=$(print_dotfiles_dir)
-	local files="vimrc vim bash_aliases bash_extra tmux.conf tmux-themepack bin config/nvim config/i3 config/polybar config/rofi config/picom config/starship.toml config/ranger/rc.config"
+	local files="vimrc vim bash_aliases bash_extra tmux.conf tmux-themepack bin config/nvim config/starship.toml config/ranger/rc.config config/i3 config/polybar config/rofi config/kitty config/picom"
 	local backup_dir="$dir-$(date "+%Y-%m-%d-%H%M")"
 
 	## pull submodules
