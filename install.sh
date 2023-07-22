@@ -28,12 +28,14 @@ help() {
 	echo "  --cli               install cli toos"
 	echo "  --gui               install gui programs"
 	echo "  --fonts             install fonts"
+	echo "  --sudoers           update user's privileges"
 	echo "  --config            install user settings in \$HOME"
 	echo ""
 	echo "EXCLUDE OPTIONS"
 	echo "  --no-cli            skip installing cli toos"
 	echo "  --no-gui            skip installing gui programs"
 	echo "  --no-fonts          skip installing fonts"
+	echo "  --no-sudoers        skip updating privileges"
 	echo "  --no-config         skip installing user config files"
 	echo ""
 	echo "TESTING OPTIONS"
@@ -52,6 +54,30 @@ get_sudo() {
 	fi
 
 	sudox="sudo"
+}
+
+## appends a line of text to a file
+append_to_file() {
+	line="$1"
+	file="$2"
+	local_sudox="$3"
+
+	if [[ -z "$run" ]]; then
+		echo -e "$line" | $local_sudox tee -a $file >/dev/null
+	else
+		$run echo echo -e "$line" '|' $local_sudox tee -a $file
+	fi
+}
+
+## appends a line of text to a file only if it's not already there
+append_to_file_unique() {
+	line="$1"
+	file="$2"
+	local_sudox="$3"
+
+	if ! $local_sudox grep -q "^$line\$" $file; then
+		append_to_file "$line" "$file" "$local_sudox"
+	fi
 }
 
 ## resolves the directory of this script (following symlinks)
@@ -83,7 +109,7 @@ install_cli_tools() {
 	## apt packages
 	get_sudo
 	echo "> core packages..."
-	$run $sudox apt install -y git git-doc git-lfs git-man python3 python3-pip python3-venv python-is-python3 vim curl clang-tools clang-tidy clang-format g++ g++-multilib cmake nodejs npm net-tools htop rename tmux ranger p7zip-full imagemagick wifi-qr
+	$run $sudox apt install -y git git-doc git-lfs git-man python3 python3-pip python3-venv python-is-python3 vim curl clang-tools clang-tidy clang-format g++ g++-multilib cmake nodejs npm net-tools htop rename tmux ranger p7zip-full imagemagick wifi-qr os-prober xclip
 	$run $sudox apt autoremove -y
 
 	## make sure a directory for bash completions exists
@@ -117,10 +143,9 @@ install_cli_tools() {
 	## neovim version manager
 	echo "> neovim (with bob version manager)..."
 	$run cargo install bob-nvim
-	if [[ -z "$run" ]]; then
-		bob complete bash >> "$bash_completions_dir/bob"
-	else
-		$run bob complete bash ">>" "$bash_completions_dir/bob"
+	if [ ! -f  "$bash_completions_dir/bob" ]; then
+		bob_complete="$(bob complete bash)"
+		append_to_file "$bob_complete" "$bash_completions_dir/bob"
 	fi
 	$run bob use nightly
 	
@@ -181,6 +206,20 @@ install_fonts() {
 	$run fc-cache -fr
 }
 
+update_sudoers() {
+	get_sudo
+
+	sudoers='/etc/sudoers'
+	username="$(whoami)"
+	allowed_executables='/usr/bin/veracrypt /usr/sbin/grub-reboot /sbin/reboot'
+
+	append_to_file "" "$sudoers" "$sudox"
+	for exe in $allowed_executables; do
+		line="$username ALL = NOPASSWD: $exe"
+		append_to_file_unique "$line" "$sudoers" "$sudox"
+	done
+}
+
 install_configs() {
 	local dir=$(print_dotfiles_dir)
 	local files="vimrc vim bash_aliases bash_extra tmux.conf tmux-themepack bin config/nvim config/i3 config/polybar config/rofi config/picom config/starship.toml config/ranger/rc.config"
@@ -210,24 +249,12 @@ install_configs() {
 
 	## add extra .bashrc configuration
 	local import_bash_extra_line='. $HOME/.bash_extra'
-	if ! grep -q "^$import_bash_extra_line\$" $HOME/.bashrc; then
-		if [[ -z "$run" ]]; then
-			echo -e "\n$import_bash_extra_line\n" >> $HOME/.bashrc
-		else
-			$run echo -e "\n$import_bash_extra_line\n" ">>" $HOME/.bashrc
-		fi
-	fi
+	append_to_file_unique "$import_bash_extra_line" "$HOME/.bashrc"
 
 	## gitconfig 
 	local import_gitconfig_line="path = $dir/gitconfig"
 	$run touch $HOME/.gitconfig
-	if ! grep -q "$import_gitconfig_line" $HOME/.gitconfig; then
-		if [[ -z "$run" ]]; then
-			echo -e "[include]\n\t$import_gitconfig_line" >> $HOME/.gitconfig
-		else
-			$run echo -e "[include]\n\t$import_gitconfig_line" ">>" $HOME/.gitconfig
-		fi
-	fi
+	append_to_file_unique "[include]\n\t$import_gitconfig_line" "$HOME/.gitconfig"
 }
 
 ################################################################################
@@ -238,6 +265,7 @@ need_update_os=0
 need_install_cli=0
 need_install_gui=0
 need_install_fonts=0
+need_sudoers=0
 need_config=0
 
 parse_args() {
@@ -249,6 +277,7 @@ parse_args() {
 	local no_install_cli=0
 	local no_install_gui=0
 	local no_install_fonts=0
+	local no_sudoers=0
 	local no_config=0
 
 	while [[ $# -gt 0 ]]; do
@@ -285,6 +314,15 @@ parse_args() {
 				shift
 				;;
 
+			--sudoers)
+				need_sudoers=1
+				shift
+				;;
+			--no-sudoers)
+				no_sudoers=1
+				shift
+				;;
+
 			--config)
 				need_config=1
 				shift
@@ -298,6 +336,7 @@ parse_args() {
 				need_install_cli=1
 				need_install_gui=1
 				need_install_fonts=1
+				need_sudoers=1
 				need_config=1
 				shift
 				;;
@@ -318,6 +357,7 @@ parse_args() {
 	need_install_cli=$(($need_install_cli-$no_install_cli))
 	need_install_gui=$(($need_install_gui-$no_install_gui))
 	need_install_fonts=$(($need_install_fonts-$no_install_fonts))
+	need_sudoers=$(($need_sudoers-$no_sudoers))
 	need_config=$(($need_config-$no_config))
 
 	if [[ $need_install_cli -eq 1 || $need_install_gui -eq 1 || $need_install_fonts -eq 1 ]]; then
@@ -365,6 +405,12 @@ main() {
 		echo ""
 	fi
 
+	if [[ $need_sudoers -eq 1 ]]; then
+		echo "--- Updating sudoers ---------------------------------------"
+		update_sudoers
+		echo ""
+	fi
+
 	if [[ $need_config -eq 1 ]]; then
 		echo "--- Copying config files -----------------------------------"
 		install_configs
@@ -373,3 +419,4 @@ main() {
 }
 
 main $@
+
