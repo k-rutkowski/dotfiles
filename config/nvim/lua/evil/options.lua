@@ -10,7 +10,7 @@ vim.o.mouse = ''
 vim.o.undofile = true
 vim.o.swapfile = false
 vim.o.backup = false
---vim.o.clipboard = 'unnamedplus'
+vim.o.clipboard = 'unnamedplus'
 
 vim.o.updatetime = 50
 vim.o.timeout = true
