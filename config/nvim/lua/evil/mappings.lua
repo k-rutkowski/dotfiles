@@ -68,3 +68,7 @@ vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous dia
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next diagnostic message' })
 vim.keymap.set('n', '<leader>i', vim.diagnostic.open_float, { desc = 'Open floating diagnostic message' })
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostics list' })
+
+-- Misc
+vim.keymap.set('n', '<leader>X', '<cmd>!chmod +x %<cr>', { desc = 'Make this file executable' })
+vim.keymap.set('n', '<leader>rc', '<cmd>edit ~/.config/nvim/lua/evil<cr>', { desc = 'Open neovim config' })

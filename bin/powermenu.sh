@@ -9,6 +9,6 @@ case "$chosen" in
 	"󰖳  Reboot to Windows") $HOME/.bin/reboot-to-windows.sh ;;
 	"  Hibernate") systemctl hibernate ;;
 	"󰍂  Log Out") i3-msg exit ;;
-	"  Lock") i3lock ;;
+	"  Lock") $HOME/.bin/lock-screen.sh ;;
 	*) exit 1 ;;
 esac

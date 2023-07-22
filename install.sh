@@ -58,9 +58,9 @@ get_sudo() {
 
 ## appends a line of text to a file
 append_to_file() {
-	line="$1"
-	file="$2"
-	local_sudox="$3"
+	local line="$1"
+	local file="$2"
+	local local_sudox="$3"
 
 	if [[ -z "$run" ]]; then
 		echo -e "$line" | $local_sudox tee -a $file >/dev/null
@@ -71,9 +71,9 @@ append_to_file() {
 
 ## appends a line of text to a file only if it's not already there
 append_to_file_unique() {
-	line="$1"
-	file="$2"
-	local_sudox="$3"
+	local line="$1"
+	local file="$2"
+	local local_sudox="$3"
 
 	if ! $local_sudox grep -q "^$line\$" $file; then
 		append_to_file "$line" "$file" "$local_sudox"
@@ -157,7 +157,7 @@ install_gui_tools() {
 	get_sudo
 
 	## window manager, terminal emulator
-	$run $sudox apt install -y i3 polybar rofi kitty pavucontrol lxappearance nitrogen papirus-icon-theme
+	$run $sudox apt install -y i3 polybar rofi kitty pavucontrol lxappearance nitrogen papirus-icon-theme scrot xautolock
 
 	## some useful tools
 	$run $sudox apt install -y qutebrowser
