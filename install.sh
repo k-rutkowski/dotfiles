@@ -157,7 +157,7 @@ install_gui_tools() {
 	get_sudo
 
 	## window manager, terminal emulator
-	$run $sudox apt install -y i3 polybar rofi kitty pavucontrol lxappearance nitrogen papirus-icon-theme scrot xautolock
+	$run $sudox apt install -y i3 polybar rofi kitty arandr pavucontrol lxappearance nitrogen papirus-icon-theme scrot xautolock
 
 	## some useful tools
 	$run $sudox apt install -y qutebrowser
