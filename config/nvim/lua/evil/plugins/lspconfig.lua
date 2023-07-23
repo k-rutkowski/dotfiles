@@ -41,7 +41,7 @@ return {
 
       -- See `:help K` for why this keymap
       --nmap('K', vim.lsp.buf.hover, 'Hover Documentation', { unique = true })
-      nmap('<C-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
+      nmap('<leader>K', vim.lsp.buf.signature_help, 'Signature Documentation')
 
       -- Lesser used LSP functionality
       nmap('gD', vim.lsp.buf.declaration, 'Goto Declaration')
