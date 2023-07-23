@@ -37,7 +37,7 @@ vim.keymap.set('n', '<leader>j', '<cmd>lprev<CR>zz', { noremap = true })
 vim.keymap.set('n', '<leader>s', [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]], { noremap = true })
 
 -- tmux integration
-vim.keymap.set('n', 'C-s', '<cmd>!tmux neww tmux-sessionizer<cr>', { noremap = true, silent = true })
+vim.keymap.set('n', '<C-s>', '<cmd>!tmux neww tmux-sessionizer.sh<cr>', { noremap = true, silent = true })
 
 -- increment/decrement a number
 vim.keymap.set('n', '=', '<C-a>', { silent = true })
