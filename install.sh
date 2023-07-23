@@ -255,6 +255,8 @@ install_configs() {
 	local import_gitconfig_line="path = $dir/gitconfig"
 	$run touch $HOME/.gitconfig
 	append_to_file_unique "[include]\n\t$import_gitconfig_line" "$HOME/.gitconfig"
+
+	echo "Completed."
 }
 
 ################################################################################
