@@ -37,7 +37,7 @@ vim.keymap.set('n', '<leader>j', '<cmd>lprev<CR>zz', { noremap = true })
 vim.keymap.set('n', '<leader>s', [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]], { noremap = true })
 
 -- tmux integration
-vim.keymap.set('n', 'C-s', '<cmd>!tmux neww tmux-sessionizer<cr>', { noremap = true, silent = true })
+vim.keymap.set('n', '<C-s>', '<cmd>!tmux neww tmux-sessionizer.sh<cr>', { noremap = true, silent = true })
 
 -- increment/decrement a number
 vim.keymap.set('n', '=', '<C-a>', { silent = true })
@@ -54,10 +54,10 @@ vim.keymap.set('n', '<leader>c', vim.cmd.bdelete, { desc = "Close current buffer
 vim.keymap.set('n', '<leader>\\', '<cmd>vsplit<cr>', { noremap = true })
 vim.keymap.set('n', '<leader>-', '<cmd>split<cr>', { noremap = true })
 vim.keymap.set('n', '<leader>x', '<C-w>q', { noremap = true })
-vim.keymap.set('n', '<up>', '<C-w>k', { noremap = true })
-vim.keymap.set('n', '<down>', '<C-w>j', { noremap = true })
-vim.keymap.set('n', '<left>', '<C-w>h', { noremap = true })
-vim.keymap.set('n', '<right>', '<C-w>l', { noremap = true })
+--vim.keymap.set('n', '<up>', '<C-w>k', { noremap = true })
+--vim.keymap.set('n', '<down>', '<C-w>j', { noremap = true })
+--vim.keymap.set('n', '<left>', '<C-w>h', { noremap = true })
+--vim.keymap.set('n', '<right>', '<C-w>l', { noremap = true })
 vim.keymap.set('n', '<S-up>', '<C-w>+<C-w>+', { noremap = true })
 vim.keymap.set('n', '<S-down>', '<C-w>-<C-w>-', { noremap = true })
 vim.keymap.set('n', '<S-left>', '<C-w><<C-w><', { noremap = true })

@@ -1,6 +1,18 @@
 [submodule "vim/bundle/Vundle.vim"]
 	path = vim/bundle/Vundle.vim
 	url = https://github.com/VundleVim/Vundle.vim.git
-[submodule "tmux-themepack"]
-	path = tmux-themepack
-	url = https://github.com/jimeh/tmux-themepack.git
+[submodule "config/tmux/plugins/tpm"]
+	path = config/tmux/plugins/tpm
+	url = http://github.com/tmux-plugins/tpm
+[submodule "config/tmux/plugins/tmux-sensible"]
+	path = config/tmux/plugins/tmux-sensible
+	url = http://github.com/tmux-plugins/tmux-sensible
+[submodule "config/tmux/plugins/tmux-yank"]
+	path = config/tmux/plugins/tmux-yank
+	url = http://github.com/tmux-plugins/tmux-yank
+[submodule "config/tmux/plugins/vim-tmux-navigator"]
+	path = config/tmux/plugins/vim-tmux-navigator
+	url = http://github.com/christoomey/vim-tmux-navigator
+[submodule "config/tmux/plugins/tmux"]
+	path = config/tmux/plugins/tmux
+	url = http://github.com/catppuccin/tmux
