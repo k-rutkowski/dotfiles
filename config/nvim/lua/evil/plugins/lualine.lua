@@ -15,9 +15,8 @@ return {
   opts = {
     options = {
   	icons_enabled = true,
-  	theme = 'onedark',
+  	theme = 'tokyodark',
   	component_separators = '·',
-  	--section_separators = '',
     },
     sections = {
   	lualine_x = { show_macro_recording },
