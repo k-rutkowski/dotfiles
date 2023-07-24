@@ -9,18 +9,21 @@
 	light = false
 	side-by-side = true
 	line-numbers = true
+[diff]
+	tool = nvim
+	colorMoved = default
 [difftool]
 	prompt = false
-[diff]
-	colorMoved = default
+	path = nvim
+[difftool "nvim"]
+	cmd = "nvim -d -c \"wincmd l\" -c \"norm ]c\" \"$LOCAL\" \"$MERGED\" \"$REMOTE\""
 [merge]
-	tool = diffconflicts
-	conflictstyle = diff3
-[mergetool "diffconflicts"]
-	cmd = vim -c DiffConflictsWithHistory \"$MERGED\" \"$BASE\" \"$LOCAL\" \"$REMOTE\"
-	trustExitCode = true
+	tool = nvim
 [mergetool]
+	path = nvim
 	keepBackup = false
+[mergetool "nvim"]
+	cmd = "nvim -d -c \"wincmd l\" -c \"norm ]c\" \"$LOCAL\" \"$MERGED\" \"$REMOTE\""
 [alias]
 	graph = lg1 --simplify-by-decoration
 	graph-specific = lg1-specific --simplify-by-decoration
