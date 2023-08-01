@@ -105,6 +105,28 @@ update_os() {
 	$run $sudox apt dist-upgrade -y
 }
 
+install_neovim() {
+	## add ppa and install nvim with apt
+	$run $sudox add-apt-repository ppa:neovim-ppa/unstable -y
+	$run $sudox apt update -y
+	$run $sudox apt install neovim -y
+	
+	# make nvim the default editor
+	nvim_path="$(which nvim)"
+	$run $sudox update-alternatives --install /usr/bin/ex ex "$nvim_path" 60
+	$run $sudox update-alternatives --install /usr/bin/vi vi "$nvim_path" 60
+	$run $sudox update-alternatives --install /usr/bin/vim vim "$nvim_path" 60
+	$run $sudox update-alternatives --install /usr/bin/view view "$nvim_path" 60
+	$run $sudox update-alternatives --install /usr/bin/vimdiff vimdiff "$nvim_path" 60
+	$run $sudox update-alternatives --install /usr/bin/editor editor "$nvim_path" 60
+	$run $sudox update-alternatives --set ex "$nvim_path"
+	$run $sudox update-alternatives --set vi "$nvim_path"
+	$run $sudox update-alternatives --set vim "$nvim_path"
+	$run $sudox update-alternatives --set view "$nvim_path"
+	$run $sudox update-alternatives --set vimdiff "$nvim_path"
+	$run $sudox update-alternatives --set editor "$nvim_path"
+}
+
 install_cli_tools() {
 	## apt packages
 	get_sudo
@@ -140,17 +162,9 @@ install_cli_tools() {
 	echo "> better coreutils..."
 	$run cargo install starship exa bat ripgrep du-dust git-delta
 
-	## neovim version manager
-	echo "> neovim (with bob version manager)..."
-	$run cargo install bob-nvim
-	if [ ! -f  "$bash_completions_dir/bob" ]; then
-		bob_complete="$(bob complete bash)"
-		append_to_file "$bob_complete" "$bash_completions_dir/bob"
-	fi
-	$run bob use nightly
-	
-	## make vim the default editor
-	$run $sudox update-alternatives --set editor "$(which vim.basic)"
+	## neovim
+	echo "> neovim..."
+	install_neovim
 }
 
 install_gui_tools() {
@@ -421,4 +435,5 @@ main() {
 }
 
 main $@
+
 
