@@ -1,29 +1,32 @@
 [core]
 	pager = delta
+
 [interactive]
 	diffFilter = delta --color-only
+
 [add.interactive]
 	useBuiltin = false
+
 [delta]
 	navigate = true
 	light = false
 	side-by-side = true
 	line-numbers = true
+
 [diff]
-	tool = nvim
+	tool = nvimdiff1
 	colorMoved = default
+
 [difftool]
 	prompt = false
-	path = nvim
-[difftool "nvim"]
-	cmd = "nvim -d -c \"wincmd l\" -c \"norm ]c\" \"$LOCAL\" \"$MERGED\" \"$REMOTE\""
+
 [merge]
-	tool = nvim
+	tool = nvimdiff1
+
 [mergetool]
-	path = nvim
 	keepBackup = false
-[mergetool "nvim"]
-	cmd = "nvim -d -c \"wincmd l\" -c \"norm ]c\" \"$LOCAL\" \"$MERGED\" \"$REMOTE\""
+	hideResolved = true
+
 [alias]
 	graph = lg1 --simplify-by-decoration
 	graph-specific = lg1-specific --simplify-by-decoration
@@ -39,3 +42,4 @@
 	lg3-specific = log --graph --abbrev-commit --decorate --format=format:'%w(110,0,11)%C(bold blue)%h%C(reset) %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset) %C(bold cyan)(committed: %cD)%C(reset) %C(auto)%d%C(reset)%n''%w(110,10,11)%C(white)%s%C(reset)%n''%w(110,10,12)%C(dim white)- %an <%ae> %C(reset) %C(dim white)(committer: %cn <%ce>)%C(reset)'
 [pull]
 	rebase = true
+
