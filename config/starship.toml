@@ -44,17 +44,17 @@ error_symbol = "[\\$](bold fg:#F04020 bg:#23557A)"
 # You can also replace your username with a neat symbol like  to save some space
 [username]
 show_always = true
-style_user = "fg:white bg:#23557A"
-style_root = "fg:white bg:#23557A"
+style_user = "fg:#e7e7e7 bg:#23557A"
+style_root = "fg:#e7e7e7 bg:#23557A"
 format = '[ $user ]($style)'
 
 [hostname]
 ssh_only = false
-style = "fg:white bg:#23557A"
+style = "fg:#e7e7e7 bg:#23557A"
 format = '[$ssh_symbol$hostname ]($style)'
 
 [directory]
-style = "fg:white bg:#304C60"
+style = "fg:#e7e7e7 bg:#304C60"
 format = "[ $path ]($style)"
 truncation_length = 7
 truncation_symbol = "…/"
@@ -76,31 +76,31 @@ truncate_to_repo = false
 
 [c]
 symbol = " "
-style = "fg:white bg:#502050"
+style = "fg:#e7e7e7 bg:#502050"
 format = '[ $symbol ($version) ]($style)'
 
 [docker_context]
 symbol = " "
-style = "fg:white bg:#305050"
+style = "fg:#e7e7e7 bg:#305050"
 format = '[ $symbol $context ]($style) $path'
 
 [elixir]
 symbol = " "
-style = "fg:white bg:#502050"
+style = "fg:#e7e7e7 bg:#502050"
 format = '[ $symbol ($version) ]($style)'
 
 [elm]
 symbol = " "
-style = "fg:white bg:#502050"
+style = "fg:#e7e7e7 bg:#502050"
 format = '[ $symbol ($version) ]($style)'
 
 [git_branch]
 symbol = ""
-style = "fg:white bg:#A02070"
+style = "fg:#e7e7e7 bg:#A02070"
 format = '[ $symbol $branch]($style)'
 
 [git_status]
-style = "fg:white bg:#A02070"
+style = "fg:#e7e7e7 bg:#A02070"
 conflicted = " $count="
 staged = " $count+"
 deleted = " $count✘"
@@ -115,37 +115,37 @@ behind = "￬${count}"
 
 [golang]
 symbol = " "
-style = "fg:white bg:#502050"
+style = "fg:#e7e7e7 bg:#502050"
 format = '[ $symbol ($version) ]($style)'
 
 [haskell]
 symbol = " "
-style = "fg:white bg:#502050"
+style = "fg:#e7e7e7 bg:#502050"
 format = '[ $symbol ($version) ]($style)'
 
 [java]
 symbol = " "
-style = "fg:white bg:#502050"
+style = "fg:#e7e7e7 bg:#502050"
 format = '[ $symbol ($version) ]($style)'
 
 [julia]
 symbol = " "
-style = "fg:white bg:#502050"
+style = "fg:#e7e7e7 bg:#502050"
 format = '[ $symbol ($version) ]($style)'
 
 [nodejs]
 symbol = ""
-style = "fg:white bg:#502050"
+style = "fg:#e7e7e7 bg:#502050"
 format = '[ $symbol ($version) ]($style)'
 
 [nim]
 symbol = " "
-style = "fg:white bg:#502050"
+style = "fg:#e7e7e7 bg:#502050"
 format = '[ $symbol ($version) ]($style)'
 
 [rust]
 #symbol = ""
-style = "fg:white bg:#502050"
+style = "fg:#e7e7e7 bg:#502050"
 format = '[ $symbol($version) ]($style)'
 
 [time]
@@ -155,7 +155,7 @@ style = "bg:#33658A"
 format = '[$time ]($style)'
 
 [cmd_duration]
-style = "fg:white bg:#33658A"
+style = "fg:#e7e7e7 bg:#33658A"
 min_time = 2
 format = '[$duration ]($style)'
 
