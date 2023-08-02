@@ -1,6 +1,6 @@
 -- See `:help vim.keymap.set()`
 
-vim.keymap.set('n', '<leader>e', vim.cmd.Ex, { desc = "Explore project directory" })
+vim.keymap.set('n', '<leader>e', '<cmd>Ex<cr><cmd>set number<cr><cmd>set relativenumber<cr>', { silent = true, desc = "Explore project directory" })
 
 -- basic
 vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
@@ -29,10 +29,10 @@ vim.keymap.set({'n', 'v'}, '<leader>d', [["_d]], { noremap = true })
 vim.keymap.set('x', '<leader>p', [["_dP]], { noremap = true })
 
 -- quick / location list  navigation
-vim.keymap.set('n', '<C-S-k>', '<cmd>cnext<CR>zz', { noremap = true })
-vim.keymap.set('n', '<C-S-j>', '<cmd>cprev<CR>zz', { noremap = true })
-vim.keymap.set('n', '<leader>k', '<cmd>lnext<CR>zz', { noremap = true })
-vim.keymap.set('n', '<leader>j', '<cmd>lprev<CR>zz', { noremap = true })
+vim.keymap.set('n', '<C-S-k>', '<cmd>cnext<cr>zz', { noremap = true })
+vim.keymap.set('n', '<C-S-j>', '<cmd>cprev<cr>zz', { noremap = true })
+vim.keymap.set('n', '<leader>k', '<cmd>lnext<cr>zz', { noremap = true })
+vim.keymap.set('n', '<leader>j', '<cmd>lprev<cr>zz', { noremap = true })
 
 vim.keymap.set('n', '<leader>s', [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]], { noremap = true })
 
