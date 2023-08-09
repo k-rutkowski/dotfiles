@@ -22,7 +22,7 @@ vim.wo.signcolumn = 'yes'
 vim.o.number = true
 vim.o.relativenumber = true
 vim.o.numberwidth = 4
-vim.o.colorcolumn = '90'
+vim.o.colorcolumn = '100'
 
 vim.o.hlsearch = false
 vim.o.incsearch = true
