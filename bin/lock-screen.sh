@@ -28,11 +28,11 @@ trap restore HUP INT TERM
 xset +dpms dpms 0 0 5
 mkdir -p "$tmpdir"
 scrot -d 1 "$screen_path"
-convert -scale 5% -scale 2000% "$screen_path" "$screen_path"
+convert -scale 10% -scale 1000% "$screen_path" "$screen_path"
 convert -blur 0x1 "$screen_path" "$screen_path"
 
 if [ -f "$image_path" ]; then
-  convert -composite "$screen_path" $image_path -gravity South -geometry -800x20 "$screen_path"
+  convert -composite "$screen_path" $image_path -gravity South -geometry +1200x20 "$screen_path"
 fi
 
 i3lock -i "$screen_path" -t
