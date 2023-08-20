@@ -170,11 +170,11 @@ install_cli_tools() {
 install_gui_tools() {
 	get_sudo
 
-	## window manager, terminal emulator
-	$run $sudox apt install -y i3 polybar rofi kitty arandr pavucontrol lxappearance nitrogen papirus-icon-theme scrot xautolock
+	## window manager, terminal emulator, file manager
+	$run $sudox apt install -y i3 polybar rofi kitty arandr picom pavucontrol lxappearance nitrogen papirus-icon-theme scrot xautolock thunar
 
 	## some useful tools
-	$run $sudox apt install -y qutebrowser
+	$run $sudox apt install -y qutebrowser qemu-kvm virt-manager
 
 	## multimedia
 	$run $sudox apt install -y vlc smplayer
