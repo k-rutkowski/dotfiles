@@ -28,13 +28,15 @@ vim.keymap.set('n', '<leader>Y', [["+Y]], { noremap = true })
 vim.keymap.set({'n', 'v'}, '<leader>d', [["_d]], { noremap = true })
 vim.keymap.set('x', '<leader>p', [["_dP]], { noremap = true })
 
+-- text operations
+vim.keymap.set('v', '<leader>s', '"by:%s/<C-r>b//gI<left><left><left>', { noremap = true, desc = 'Substitute all occurences of highlighted text' })
+vim.keymap.set('n', '<leader>s', [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<left><left><left>]], { noremap = true, desc = 'Substitute all occurences of a word under cursor' })
+
 -- quick / location list  navigation
 vim.keymap.set('n', '<C-S-k>', '<cmd>cnext<cr>zz', { noremap = true })
 vim.keymap.set('n', '<C-S-j>', '<cmd>cprev<cr>zz', { noremap = true })
 vim.keymap.set('n', '<leader>k', '<cmd>lnext<cr>zz', { noremap = true })
 vim.keymap.set('n', '<leader>j', '<cmd>lprev<cr>zz', { noremap = true })
-
-vim.keymap.set('n', '<leader>s', [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]], { noremap = true })
 
 -- tmux integration
 vim.keymap.set('n', '<C-s>', '<cmd>!tmux neww tmux-sessionizer.sh<cr>', { noremap = true, silent = true })
