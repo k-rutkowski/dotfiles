@@ -131,7 +131,7 @@ install_cli_tools() {
 	## apt packages
 	get_sudo
 	echo "> core packages..."
-	$run $sudox apt install -y git git-doc git-lfs git-man python3 python3-pip python3-venv python-is-python3 vim curl clang-tools clang-tidy clang-format g++ g++-multilib cmake nodejs npm net-tools htop rename tmux ranger p7zip-full imagemagick wifi-qr os-prober xclip
+	$run $sudox apt install -y git git-doc git-lfs git-man python3 python3-pip python3-venv python-is-python3 vim curl clang-tools clang-tidy clang-format g++ g++-multilib cmake nodejs npm net-tools htop rename tmux ranger p7zip-full imagemagick wifi-qr os-prober xclip entr
 	$run $sudox apt autoremove -y
 
 	## make sure a directory for bash completions exists
