@@ -1,5 +1,9 @@
 [core]
 	pager = delta
+	editor = nvim
+
+[pull]
+	rebase = true
 
 [interactive]
 	diffFilter = delta --color-only
@@ -14,18 +18,22 @@
 	line-numbers = true
 
 [diff]
-	tool = nvimdiff1
+	tool = nvimdiff
 	colorMoved = default
+
+[difftool "nvimdiff"]
+	cmd = "nvim -d \"$LOCAL\" \"$REMOTE\""
 
 [difftool]
 	prompt = false
 
 [merge]
-	tool = nvimdiff1
+	tool = nvimdiff
 
 [mergetool]
 	keepBackup = false
 	hideResolved = true
+	prompt = false
 
 [alias]
 	graph = lg1 --simplify-by-decoration
@@ -40,6 +48,4 @@
 	lg1-specific = log --graph --abbrev-commit --decorate --format=format:'%w(110,0,10)%C(bold blue)%h%C(reset) %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(auto)%d%C(reset)'
 	lg2-specific = log --graph --abbrev-commit --decorate --format=format:'%w(110,0,11)%C(bold blue)%h%C(reset) %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(auto)%d%C(reset)%n''%w(110,10,11)%C(white)%s%C(reset) %C(dim white)- %an%C(reset)'
 	lg3-specific = log --graph --abbrev-commit --decorate --format=format:'%w(110,0,11)%C(bold blue)%h%C(reset) %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset) %C(bold cyan)(committed: %cD)%C(reset) %C(auto)%d%C(reset)%n''%w(110,10,11)%C(white)%s%C(reset)%n''%w(110,10,12)%C(dim white)- %an <%ae> %C(reset) %C(dim white)(committer: %cn <%ce>)%C(reset)'
-[pull]
-	rebase = true
 
