@@ -18,17 +18,17 @@
 	line-numbers = true
 
 [diff]
-	tool = nvimdiff
+	tool = vimdiff
 	colorMoved = default
 
-[difftool "nvimdiff"]
+[difftool "vimdiff"]
 	cmd = "nvim -d \"$LOCAL\" \"$REMOTE\""
 
 [difftool]
 	prompt = false
 
 [merge]
-	tool = nvimdiff
+	tool = vimdiff
 
 [mergetool]
 	keepBackup = false

@@ -20,3 +20,7 @@ alias ports='netstat -tulanp'
 alias su='sudo -i'
 alias x='exit'
 
+alias gs="git status"
+alias gl="git log --oneline -n 10"
+alias gll="git log --oneline -n 40"
+alias gln="git log --oneline -n"
