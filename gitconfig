@@ -2,6 +2,9 @@
 	pager = delta
 	editor = nvim
 
+[rerere]
+	enabled = true
+
 [pull]
 	rebase = true
 
@@ -36,8 +39,8 @@
 	prompt = false
 
 [alias]
-	graph = lg1 --simplify-by-decoration
-	graph-specific = lg1-specific --simplify-by-decoration
+	graph = lg1a --simplify-by-decoration
+	graph-specific = lg1 --simplify-by-decoration
 	lg = lg1
 	lg1 = lg1-specific
 	lg1a = lg1-specific --all
