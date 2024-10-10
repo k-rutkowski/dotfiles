@@ -1,6 +1,7 @@
 [core]
 	pager = delta
 	editor = nvim
+	commentchar = ";"
 
 [rerere]
 	enabled = true

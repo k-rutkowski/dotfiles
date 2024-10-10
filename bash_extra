@@ -1,6 +1,8 @@
 set -o vi
 
-PATH=$HOME/.local/bin:$HOME/.bin:$HOME/bin:$HOME/scripts:$HOME/.local/share/bob/nvim-bin:$PATH
+PATH=$HOME/.local/bin:$HOME/.bin:$HOME/bin:$HOME/scripts:$HOME/.apps:$PATH
+
+export BROWSER="/usr/bin/firefox"
 
 eval "$(starship init bash)"
 eval "$(zoxide init bash)"
