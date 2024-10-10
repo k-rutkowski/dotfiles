@@ -130,9 +130,13 @@ install_neovim() {
 install_cli_tools() {
 	## apt packages
 	get_sudo
+	$run $sudox dpkg --add-architecture i386
+	update_os
+
 	echo "> core packages..."
-	$run $sudox apt install -y git git-doc git-lfs git-man python3 python3-pip python3-venv python-is-python3 vim curl clang-tools clang-tidy clang-format g++ g++-multilib cmake nodejs npm net-tools htop rename tmux ranger p7zip-full imagemagick wifi-qr os-prober xclip entr neofetch
+	$run $sudox apt install -y git git-doc git-lfs git-man tldr python3 python3-pip python3-venv python-is-python3 vim curl clang-tools clang-tidy clang-format g++ g++-multilib cmake nodejs npm net-tools libfuse2 htop rename tmux ranger p7zip-full imagemagick wifi-qr os-prober xclip entr neofetch software-properties-common apt-transport-https playerctl pulseaudio-utils
 	$run $sudox apt autoremove -y
+
 
 	## make sure a directory for bash completions exists
 	local bash_completions_dir="$HOME/.local/share/bash-completion/completions"
@@ -164,39 +168,47 @@ install_cli_tools() {
 
 	## neovim
 	echo "> neovim..."
-	install_neovim
+	#install_neovim  ## <-- obsolete
+	$run $sudox apt install neovim
+
+	## flathub
+	$run $sudox apt install flatpak
+	$run flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 }
 
 install_gui_tools() {
 	get_sudo
 
 	## window manager, terminal emulator, file manager
-	$run $sudox apt install -y i3 polybar rofi kitty arandr picom pavucontrol lxappearance nitrogen papirus-icon-theme scrot xautolock thunar
+	$run $sudox apt install -y i3 polybar rofi kitty arandr picom lxappearance nitrogen papirus-icon-theme gnome-screenshot xautolock thunar
+
+	## device managers
+	$run $sudox apt install -y pavucontrol blueman policykit-1-gnome
 
 	## some useful tools
-	$run $sudox apt install -y qutebrowser qemu-kvm virt-manager
+	$run $sudox apt install -y qemu-kvm virt-manager
 
 	## multimedia
 	$run $sudox apt install -y vlc smplayer
 
-	## requirement for image preview in ranger
-	$run pip install Pillow
-
-	## ad blocker for qutebrowser
-	$run pip install adblock
-
 	## make kitty the default terminal
 	$run $sudox update-alternatives --set x-terminal-emulator "$(which kitty)"
 
-	# todo
 	## email client, spotify, slack
+	$run $sudox thunderbird libreoffice slack
+	$run $sudox snap install spotify
 
-	## stuff from flathub
-	#$run flatpak install spotify
+	## steam
+	$run $sudox apt install -y steam-installer steam-devices
+
+	## epic
+	$run flatpak install flathub io.github.achetagames.epic_asset_manager
 }
 
 install_fonts() {
 	get_sudo
+
+	$run $sudox apt install fonts-font-awesome
 
 	## accept mscorefonts eula
 	echo ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true | $run $sudox debconf-set-selections
@@ -236,7 +248,7 @@ update_sudoers() {
 
 install_configs() {
 	local dir=$(print_dotfiles_dir)
-	local files="vimrc vim bash_aliases bash_extra bin config/tmux config/nvim config/starship.toml config/ranger/rc.config config/i3 config/polybar config/rofi config/kitty config/picom"
+	local files="vimrc vim ideavimrc bash_aliases bash_extra bin config/tmux config/nvim config/starship.toml config/ranger/rc.config config/i3 config/polybar config/rofi config/kitty config/picom"
 	local backup_dir="$dir-$(date "+%Y-%m-%d-%H%M")"
 
 	## pull submodules

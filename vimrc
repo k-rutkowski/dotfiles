@@ -89,7 +89,7 @@ set visualbell
 set noerrorbells
 
 " -- Mapping
-let mapleader = ","
+cet mapleader = " "
 
 imap jk <Esc>
 imap jK <Esc>
