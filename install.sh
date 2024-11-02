@@ -134,7 +134,7 @@ install_cli_tools() {
 	update_os
 
 	echo "> core packages..."
-	$run $sudox apt install -y git git-doc git-lfs git-man tldr python3 python3-pip python3-venv python-is-python3 vim curl clang-tools clang-tidy clang-format g++ g++-multilib cmake nodejs npm net-tools libfuse2 htop rename tmux ranger p7zip-full imagemagick wifi-qr os-prober xclip entr neofetch software-properties-common apt-transport-https playerctl pulseaudio-utils
+	$run $sudox apt install -y git git-doc git-lfs git-man tldr python3 python3-pip python3-venv python-is-python3 vim curl clang-tools clang-tidy clang-format g++ g++-multilib cmake nodejs npm net-tools libfuse2 htop rename tmux ranger p7zip-full imagemagick wifi-qr os-prober xdotool xclip entr neofetch software-properties-common apt-transport-https playerctl pulseaudio-utils
 	$run $sudox apt autoremove -y
 
 
@@ -166,6 +166,9 @@ install_cli_tools() {
 	echo "> better coreutils..."
 	$run cargo install starship exa bat ripgrep du-dust git-delta
 
+	echo "> macropad programming tool..."
+	$run cargo install ch57x-keyboard-tool
+
 	## neovim
 	echo "> neovim..."
 	#install_neovim  ## <-- obsolete
@@ -180,16 +183,16 @@ install_gui_tools() {
 	get_sudo
 
 	## window manager, terminal emulator, file manager
-	$run $sudox apt install -y i3 polybar rofi kitty arandr picom lxappearance nitrogen papirus-icon-theme gnome-screenshot xautolock thunar
+	$run $sudox apt install -y i3 polybar rofi kitty arandr picom lxappearance gtk-chtheme nitrogen papirus-icon-theme gnome-screenshot xautolock thunar
 
 	## device managers
 	$run $sudox apt install -y pavucontrol blueman policykit-1-gnome
 
 	## some useful tools
-	$run $sudox apt install -y qemu-kvm virt-manager
+	$run $sudox apt install -y qemu-kvm virt-manager screenkey
 
 	## multimedia
-	$run $sudox apt install -y vlc smplayer
+	$run $sudox apt install -y vlc smplayer v4l2loopback-dkms v4l2loopback-utils
 
 	## make kitty the default terminal
 	$run $sudox update-alternatives --set x-terminal-emulator "$(which kitty)"
