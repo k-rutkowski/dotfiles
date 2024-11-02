@@ -75,9 +75,9 @@ layers:
   - buttons:
       # Multimedia commands are supported but
       # cannot be mixed with normal keys and modifiers.
-      - ["f5", "prev", "next", "play"]
       - ["escape", "q", "w", "e"]
-      - ["shift", "a", "a", "d"]
+      - ["shift", "a", "s", "d"]
+      - ["ctrl", "x", "c", "v"]
     knobs:
       - ccw: "left"
         press: "enter"
