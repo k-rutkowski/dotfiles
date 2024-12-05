@@ -105,28 +105,6 @@ update_os() {
 	$run $sudox apt dist-upgrade -y
 }
 
-install_neovim() {
-	## add ppa and install nvim with apt
-	$run $sudox add-apt-repository ppa:neovim-ppa/unstable -y
-	$run $sudox apt update -y
-	$run $sudox apt install neovim -y
-	
-	# make nvim the default editor
-	nvim_path="$(which nvim)"
-	$run $sudox update-alternatives --install /usr/bin/ex ex "$nvim_path" 60
-	$run $sudox update-alternatives --install /usr/bin/vi vi "$nvim_path" 60
-	$run $sudox update-alternatives --install /usr/bin/vim vim "$nvim_path" 60
-	$run $sudox update-alternatives --install /usr/bin/view view "$nvim_path" 60
-	$run $sudox update-alternatives --install /usr/bin/vimdiff vimdiff "$nvim_path" 60
-	$run $sudox update-alternatives --install /usr/bin/editor editor "$nvim_path" 60
-	$run $sudox update-alternatives --set ex "$nvim_path"
-	$run $sudox update-alternatives --set vi "$nvim_path"
-	$run $sudox update-alternatives --set vim "$nvim_path"
-	$run $sudox update-alternatives --set view "$nvim_path"
-	$run $sudox update-alternatives --set vimdiff "$nvim_path"
-	$run $sudox update-alternatives --set editor "$nvim_path"
-}
-
 install_cli_tools() {
 	## apt packages
 	get_sudo
@@ -134,19 +112,16 @@ install_cli_tools() {
 	update_os
 
 	echo "> core packages..."
-	$run $sudox apt install -y git git-doc git-lfs git-man tldr python3 python3-pip python3-venv python-is-python3 vim curl clang-tools clang-tidy clang-format g++ g++-multilib cmake nodejs npm net-tools libfuse2 htop rename tmux ranger p7zip-full imagemagick wifi-qr os-prober xdotool xclip entr neofetch software-properties-common apt-transport-https playerctl pulseaudio-utils
+	$run $sudox apt install -y git git-doc git-lfs git-man tldr python3 python3-pip python3-venv python-is-python3 curl clang-tools clang-tidy clang-format g++ g++-multilib cmake nodejs npm net-tools libfuse2 htop rename tmux fzf ranger p7zip-full imagemagick wifi-qr os-prober xdotool xclip entr neofetch software-properties-common apt-transport-https playerctl pulseaudio-utils jq
 	$run $sudox apt autoremove -y
-
 
 	## make sure a directory for bash completions exists
 	local bash_completions_dir="$HOME/.local/share/bash-completion/completions"
 	$run mkdir -p "$bash_completions_dir"
 
-	## fuzzy finder
-	echo "> fzf..."
-	$run rm -rf $HOME/.fzf
-	$run git clone --depth 1 https://github.com/junegunn/fzf.git $HOME/.fzf
-	$run $HOME/.fzf/install --all
+	## neovim
+	echo "> neovim..."
+	$run $sudox apt install neovim
 
 	## rust
 	echo "> rust..."
@@ -168,11 +143,6 @@ install_cli_tools() {
 
 	echo "> macropad programming tool..."
 	$run cargo install ch57x-keyboard-tool
-
-	## neovim
-	echo "> neovim..."
-	#install_neovim  ## <-- obsolete
-	$run $sudox apt install neovim
 
 	## flathub
 	$run $sudox apt install flatpak
@@ -198,8 +168,7 @@ install_gui_tools() {
 	$run $sudox update-alternatives --set x-terminal-emulator "$(which kitty)"
 
 	## email client, spotify, slack
-	$run $sudox thunderbird libreoffice slack
-	$run $sudox snap install spotify
+	$run $sudox snap install thunderbird libreoffice slack spotify
 
 	## steam
 	$run $sudox apt install -y steam-installer steam-devices
