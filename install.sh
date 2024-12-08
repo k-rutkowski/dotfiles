@@ -112,12 +112,18 @@ install_cli_tools() {
 	update_os
 
 	echo "> core packages..."
-	$run $sudox apt install -y git git-doc git-lfs git-man tldr python3 python3-pip python3-venv python-is-python3 curl clang-tools clang-tidy clang-format g++ g++-multilib cmake nodejs npm net-tools libfuse2 htop rename tmux fzf ranger p7zip-full imagemagick wifi-qr os-prober xdotool xclip entr neofetch software-properties-common apt-transport-https playerctl pulseaudio-utils jq
+	$run $sudox apt install -y git git-doc git-lfs git-man tldr python3 python3-pip python3-venv python-is-python3 curl clang-tools clang-tidy clang-format g++ g++-multilib cmake nodejs npm net-tools libfuse2 htop rename tmux ranger p7zip-full imagemagick wifi-qr os-prober xdotool xclip entr neofetch software-properties-common apt-transport-https playerctl pulseaudio-utils jq
 	$run $sudox apt autoremove -y
 
 	## make sure a directory for bash completions exists
 	local bash_completions_dir="$HOME/.local/share/bash-completion/completions"
 	$run mkdir -p "$bash_completions_dir"
+
+	## fuzzy finder
+	echo "> fzf..."
+	$run rm -rf "$HOME/.fzf"
+	$run git clone --depth 1 https://github.com/junegunn/fzf.git "$HOME/.fzf"
+	$run "$HOME/.fzf/install" --all
 
 	## neovim
 	echo "> neovim..."
