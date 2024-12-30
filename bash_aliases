@@ -4,7 +4,7 @@ alias cat='bat'
 alias du='dust'
 alias cd='z'
 alias f='fzf --preview "bat --color=always {}"'
-alias vimf='fzf -m --preview="bat --color=always {}" --bind "enter:become(nvim {+})"'
+alias fv='fzf -m --preview="bat --color=always {}" --bind "enter:become(nvim {+})"'
 
 alias c='clear'
 alias l='ls -F'

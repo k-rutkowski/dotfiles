@@ -127,7 +127,7 @@ install_cli_tools() {
 
 	## neovim
 	echo "> neovim..."
-	$run $sudox apt install neovim
+	$run $sudox snap install nvim --classic
 
 	## rust
 	echo "> rust..."
