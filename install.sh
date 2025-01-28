@@ -159,7 +159,7 @@ install_gui_tools() {
 	get_sudo
 
 	## window manager, terminal emulator, file manager
-	$run $sudox apt install -y i3 polybar rofi kitty arandr picom lxappearance gtk-chtheme nitrogen papirus-icon-theme gnome-screenshot xautolock thunar
+	$run $sudox apt install -y i3 polybar rofi kitty arandr picom lxappearance gtk-chtheme nitrogen papirus-icon-theme shutter xautolock thunar
 
 	## device managers
 	$run $sudox apt install -y pavucontrol blueman policykit-1-gnome
