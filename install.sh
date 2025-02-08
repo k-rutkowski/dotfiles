@@ -128,6 +128,8 @@ install_cli_tools() {
 	## neovim
 	echo "> neovim..."
 	$run $sudox snap install nvim --classic
+	$run $sudox update-alternatives --install /usr/bin/editor editor /snap/bin/nvim 1111
+	$run $sudox snap alias nvim editor
 
 	## rust
 	echo "> rust..."
