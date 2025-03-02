@@ -112,7 +112,7 @@ install_cli_tools() {
 	update_os
 
 	echo "> core packages..."
-	$run $sudox apt install -y git git-doc git-lfs git-man tldr python3 python3-pip python3-venv python-is-python3 curl wget nfs-common clang-tools clang-tidy clang-format g++ g++-multilib cmake nodejs npm net-tools libfuse2 htop rename tmux ranger p7zip-full imagemagick wifi-qr os-prober xdotool xclip entr neofetch software-properties-common apt-transport-https playerctl pulseaudio-utils jq
+	$run $sudox apt install -y git git-doc git-lfs git-man tldr python3 python3-pip python3-venv python-is-python3 curl wget nfs-common clang-tools clang-tidy clang-format g++ g++-multilib cmake nodejs npm net-tools libfuse2 cifs-utils htop rename tmux ranger p7zip-full imagemagick wifi-qr os-prober xdotool xclip entr neofetch software-properties-common apt-transport-https playerctl pulseaudio-utils jq
 	$run $sudox apt autoremove -y
 
 	## make sure a directory for bash completions exists
