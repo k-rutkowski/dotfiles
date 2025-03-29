@@ -105,33 +105,14 @@ update_os() {
 	$run $sudox apt dist-upgrade -y
 }
 
-install_neovim() {
-	## add ppa and install nvim with apt
-	$run $sudox add-apt-repository ppa:neovim-ppa/unstable -y
-	$run $sudox apt update -y
-	$run $sudox apt install neovim -y
-	
-	# make nvim the default editor
-	nvim_path="$(which nvim)"
-	$run $sudox update-alternatives --install /usr/bin/ex ex "$nvim_path" 60
-	$run $sudox update-alternatives --install /usr/bin/vi vi "$nvim_path" 60
-	$run $sudox update-alternatives --install /usr/bin/vim vim "$nvim_path" 60
-	$run $sudox update-alternatives --install /usr/bin/view view "$nvim_path" 60
-	$run $sudox update-alternatives --install /usr/bin/vimdiff vimdiff "$nvim_path" 60
-	$run $sudox update-alternatives --install /usr/bin/editor editor "$nvim_path" 60
-	$run $sudox update-alternatives --set ex "$nvim_path"
-	$run $sudox update-alternatives --set vi "$nvim_path"
-	$run $sudox update-alternatives --set vim "$nvim_path"
-	$run $sudox update-alternatives --set view "$nvim_path"
-	$run $sudox update-alternatives --set vimdiff "$nvim_path"
-	$run $sudox update-alternatives --set editor "$nvim_path"
-}
-
 install_cli_tools() {
 	## apt packages
 	get_sudo
+	$run $sudox dpkg --add-architecture i386
+	update_os
+
 	echo "> core packages..."
-	$run $sudox apt install -y git git-doc git-lfs git-man python3 python3-pip python3-venv python-is-python3 vim curl clang-tools clang-tidy clang-format g++ g++-multilib cmake nodejs npm net-tools htop rename tmux ranger p7zip-full imagemagick wifi-qr os-prober xclip entr neofetch
+	$run $sudox apt install -y lsd git git-doc git-lfs git-man tldr python3 python3-pip python3-venv python-is-python3 curl wget nfs-common clang-tools clang-tidy clang-format g++ g++-multilib cmake nodejs npm net-tools libfuse2 cifs-utils htop rename tmux ranger p7zip-full imagemagick wifi-qr os-prober xdotool xclip entr neofetch software-properties-common apt-transport-https playerctl pulseaudio-utils pulsemixer jq
 	$run $sudox apt autoremove -y
 
 	## make sure a directory for bash completions exists
@@ -140,9 +121,15 @@ install_cli_tools() {
 
 	## fuzzy finder
 	echo "> fzf..."
-	$run rm -rf $HOME/.fzf
-	$run git clone --depth 1 https://github.com/junegunn/fzf.git $HOME/.fzf
-	$run $HOME/.fzf/install --all
+	$run rm -rf "$HOME/.fzf"
+	$run git clone --depth 1 https://github.com/junegunn/fzf.git "$HOME/.fzf"
+	$run "$HOME/.fzf/install" --all
+
+	## neovim
+	echo "> neovim..."
+	$run $sudox snap install nvim --classic
+	$run $sudox update-alternatives --install /usr/bin/editor editor /snap/bin/nvim 1111
+	$run $sudox snap alias nvim editor
 
 	## rust
 	echo "> rust..."
@@ -160,43 +147,48 @@ install_cli_tools() {
 
 	## starship prompt, better ls, better cat, better grep, better du, better git diff
 	echo "> better coreutils..."
-	$run cargo install starship exa bat ripgrep du-dust git-delta
+	$run cargo install starship bat ripgrep du-dust git-delta
 
-	## neovim
-	echo "> neovim..."
-	install_neovim
+	echo "> macropad programming tool..."
+	$run cargo install ch57x-keyboard-tool
+
+	## flathub
+	$run $sudox apt install -y flatpak
+	$run $sudox flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 }
 
 install_gui_tools() {
 	get_sudo
 
 	## window manager, terminal emulator, file manager
-	$run $sudox apt install -y i3 polybar rofi kitty arandr picom pavucontrol lxappearance nitrogen papirus-icon-theme scrot xautolock thunar
+	$run $sudox apt install -y i3 polybar rofi kitty arandr picom lxappearance gtk-chtheme nitrogen papirus-icon-theme shutter xautolock thunar
+
+	## device managers
+	$run $sudox apt install -y pavucontrol blueman policykit-1-gnome
 
 	## some useful tools
-	$run $sudox apt install -y qutebrowser qemu-kvm virt-manager
+	$run $sudox apt install -y qemu-kvm virt-manager screenkey
 
 	## multimedia
-	$run $sudox apt install -y vlc smplayer
-
-	## requirement for image preview in ranger
-	$run pip install Pillow
-
-	## ad blocker for qutebrowser
-	$run pip install adblock
+	$run $sudox apt install -y vlc smplayer v4l2loopback-dkms v4l2loopback-utils
 
 	## make kitty the default terminal
 	$run $sudox update-alternatives --set x-terminal-emulator "$(which kitty)"
 
-	# todo
 	## email client, spotify, slack
+	$run $sudox snap install thunderbird libreoffice slack spotify
 
-	## stuff from flathub
-	#$run flatpak install spotify
+	## steam
+	$run $sudox apt install -y steam-installer steam-devices
+
+	## epic
+	$run flatpak install -y flathub io.github.achetagames.epic_asset_manager
 }
 
 install_fonts() {
 	get_sudo
+
+	$run $sudox apt install fonts-font-awesome
 
 	## accept mscorefonts eula
 	echo ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true | $run $sudox debconf-set-selections
@@ -236,7 +228,7 @@ update_sudoers() {
 
 install_configs() {
 	local dir=$(print_dotfiles_dir)
-	local files="vimrc vim bash_aliases bash_extra bin config/tmux config/nvim config/starship.toml config/ranger/rc.config config/i3 config/polybar config/rofi config/kitty config/picom"
+	local files="vimrc vim ideavimrc bash_aliases bash_extra bin config/tmux config/nvim config/starship.toml config/ranger/rc.config config/i3 config/polybar config/rofi config/kitty config/picom"
 	local backup_dir="$dir-$(date "+%Y-%m-%d-%H%M")"
 
 	## pull submodules

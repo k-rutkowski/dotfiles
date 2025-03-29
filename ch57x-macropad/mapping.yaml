@@ -1,0 +1,90 @@
+# Normal keyboard orientation is when
+# buttons are on the left side and knobs are on the right.
+# However, you may want to use the keyboard in another orientation.
+# To avoid remapping button positions in your head, just set it here.
+# Possible values are:
+#   (horizontal)
+#   - 'normal': buttons on the left, knobs on the right
+#   - 'upsidedown': buttons on the right, knobs on the left
+#   (vertical)
+#   - 'clockwise': buttons on the top, knobs on the bottom
+#   - 'counterclockwise': buttons on the bottom, knobs on the top
+orientation: normal
+
+# Different keyboard models have different numbers of buttons and knobs.
+# Set it here for proper handling.
+# Count rows and columns with the keyboard in normal orientation (knobs on the right)
+rows: 3
+columns: 4
+knobs: 3
+
+# Layers are sets of alternative key mappings.
+# The current layer is changed using a button on the side of the keyboard
+# and displayed with LEDs on top (only for the moment of changing).
+# All keyboards I saw had three layers, but I suppose other variants exist.
+layers:
+  - buttons:
+      # Array of buttons.
+      # In horizontal orientations it's `rows` rows `columns` buttons each.
+      # In vertical: `columns` rows `rows` buttons each.
+      # Each entry is either a sequence of 'chords' or a mouse event.
+      # A chord is a combination of one key with optional modifiers,
+      # like 'b', 'ctrl-alt-a' or 'win-rctrl-backspace'.
+      # It can also be just modifiers without a key: 'ctrl-alt'.
+      # You may combine up to 5 chords into a sequence using commas: 'ctrl-v,ctrl-c'.
+      # Arbitrary HID usage codes (decimal) may be given like this: '<101>'.
+      # See https://www.usb.org/sites/default/files/documents/hut1_12v2.pdf (section 10)
+      # for HID usage code list.
+      - ["ctrl-shift-alt-win-a", "ctrl-shift-alt-win-b", "ctrl-shift-alt-win-c", "ctrl-shift-alt-win-d"]
+      - ["ctrl-shift-alt-win-e", "ctrl-shift-alt-win-f", "ctrl-shift-alt-win-g", "ctrl-shift-alt-win-h"]
+      - ["ctrl-shift-alt-win-i", "ctrl-shift-alt-win-j", "ctrl-shift-alt-win-k", "ctrl-shift-alt-win-l"]
+    knobs:
+      # Knobs are listed from left to right if horizontal.
+      # Knobs are listed from top to bottom if vertical.
+      # Knobs can be rotated counter-clockwise (ccw) or clockwise (cw)
+      # and pressed down.
+      - ccw: "wheelup"
+        press: "ctrl"
+        cw: "wheeldown"
+      - ccw: "prev"
+        press: "play"
+        cw: "next"
+      - ccw: "volumedown"
+        press: "mute"
+        cw: "volumeup"
+
+  - buttons:
+      # Mouse events are clicks ('click/lclick', 'rclick', 'mclick') or
+      # wheel events ('wheelup', 'wheeldown') with one optional modifier,
+      # only 'ctrl', 'shift' and 'alt' are supported ('ctrl-wheeldown').
+      # Clicks may combine several buttons, like this: 'click+rclick'.
+      - ["numlock", "numpad7", "numpad8", "numpad9"]
+      - ["numpaddot", "numpad4", "numpad5", "numpad6"]
+      - ["numpad0", "numpad1", "numpad2", "numpad3"]
+    knobs:
+      - ccw: "left"
+        press: "enter"
+        cw: "right"
+      - ccw: "up"
+        press: "enter"
+        cw: "down"
+      - ccw: "volumedown"
+        press: "mute"
+        cw: "volumeup"
+
+  - buttons:
+      # Multimedia commands are supported but
+      # cannot be mixed with normal keys and modifiers.
+      - ["escape", "q", "w", "e"]
+      - ["shift", "a", "s", "d"]
+      - ["ctrl", "x", "c", "v"]
+    knobs:
+      - ccw: "left"
+        press: "enter"
+        cw: "right"
+      - ccw: "up"
+        press: "enter"
+        cw: "down"
+      - ccw: "volumedown"
+        press: "mute"
+        cw: "volumeup"

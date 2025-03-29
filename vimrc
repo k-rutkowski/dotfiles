@@ -5,10 +5,10 @@ filetype off
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 Plugin 'VundleVim/Vundle.vim'
-Plugin 'micha/vim-colors-solarized'
-Plugin 'scrooloose/nerdtree'
-Plugin 'benmills/vimux'
-Plugin 'k-rutkowski/vim-toggle-quickfix'
+Plugin 'ghifarit53/tokyonight-vim'
+"Plugin 'scrooloose/nerdtree'
+"Plugin 'benmills/vimux'
+"Plugin 'k-rutkowski/vim-toggle-quickfix'
 Plugin 'whiteinge/diffconflicts'
 call vundle#end()
 
@@ -16,9 +16,11 @@ filetype plugin indent on
 syntax enable
 
 " -- Colors
-set background=dark
-colorscheme solarized
-set t_Co=256
+set termguicolors
+let g:tokyonight_style = 'night'
+let g:tokyonight_enable_italic = 1
+let g:tokyonight_transparent_background = 1
+colorscheme tokyonight
 
 " -- Search files recursively
 set path+=**
@@ -89,18 +91,13 @@ set visualbell
 set noerrorbells
 
 " -- Mapping
-let mapleader = ","
+nnoremap <space> <nop>
+let mapleader=" "
 
 imap jk <Esc>
-imap jK <Esc>
-imap Jk <Esc>
-imap JK <Esc>
-vmap jk <Esc>
-vmap JK <Esc>
-vmap jK <Esc>
-vmap Jk <Esc>
 noremap ; :
-noremap \ ;
+noremap \ ,
+noremap , ;
 
 nnoremap gO O<Esc>j
 nnoremap go o<Esc>k
