@@ -153,8 +153,8 @@ install_cli_tools() {
 	$run cargo install ch57x-keyboard-tool
 
 	## flathub
-	$run $sudox apt install flatpak
-	$run flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+	$run $sudox apt install -y flatpak
+	$run $sudox flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 }
 
 install_gui_tools() {
@@ -182,7 +182,7 @@ install_gui_tools() {
 	$run $sudox apt install -y steam-installer steam-devices
 
 	## epic
-	$run flatpak install flathub io.github.achetagames.epic_asset_manager
+	$run flatpak install -y flathub io.github.achetagames.epic_asset_manager
 }
 
 install_fonts() {
