@@ -176,13 +176,15 @@ install_gui_tools() {
 	$run $sudox update-alternatives --set x-terminal-emulator "$(which kitty)"
 
 	## email client, spotify, slack
-	$run $sudox snap install thunderbird libreoffice slack spotify
+	$run $sudox snap install thunderbird libreoffice slack
 
 	## steam
 	$run $sudox apt install -y steam-installer steam-devices
 
 	## epic
 	$run flatpak install -y flathub io.github.achetagames.epic_asset_manager
+
+	$run flatpak install -y spotify
 }
 
 install_fonts() {
