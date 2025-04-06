@@ -75,3 +75,10 @@ vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagn
 -- Misc
 vim.keymap.set('n', '<leader>X', '<cmd>!chmod +x %<cr>', { desc = 'Make this file executable' })
 vim.keymap.set('n', '<leader>rc', '<cmd>edit ~/.config/nvim/lua/evil<cr>', { desc = 'Open neovim config' })
+
+-- Copilot
+vim.api.nvim_set_keymap("i", "<C-i>", 'copilot#Accept("<CR>")', { silent = true, expr = true })
+vim.api.nvim_set_keymap("i", "<C-k>", 'copilot#Previous()', { silent = true, expr = true })
+vim.api.nvim_set_keymap("i", "<C-j>", 'copilot#Next()', { silent = true, expr = true })
+vim.cmd("let g:copilot_no_tab_map = v:true")
+
