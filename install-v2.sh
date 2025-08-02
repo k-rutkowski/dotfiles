@@ -1,21 +1,12 @@
 #!/bin/bash
 
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+source $SCRIPT_DIR/helper.sh
+
 script_name=$0
 run=""
 sudox=""
 
-if [ -t 1 ]; then
-	print_style_mock="$(tput setaf 250)"
-	print_style_error="$(tput setaf 160)"
-	print_style_reset="$(tput sgr0)"
-else
-	print_style_mock=""
-	print_style_error=""
-	print_style_reset=""
-fi
-
-echoerr() { printf "%s%s%s\n" "$print_style_error" "$*" "$print_style_reset"; }
-mockrun() { printf "%s%s%s\n" "$print_style_mock" "$*" "$print_style_reset"; }
 
 help() {
 	echo "USAGE: $script_name [OPTION...]"
@@ -25,84 +16,24 @@ help() {
 	echo "  -a, --all           install and configure everyghing"
 	echo ""
 	echo "INCLUDE OPTIONS"
-	echo "  --cli               install cli toos"
-	echo "  --gui               install gui programs"
-	echo "  --fonts             install fonts"
+	echo "  --desktop           install gui programs"
 	echo "  --sudoers           update user's privileges"
-	echo "  --config            install user settings in \$HOME"
+	echo "  --dots              install user settings in \$HOME"
 	echo ""
 	echo "EXCLUDE OPTIONS"
-	echo "  --no-cli            skip installing cli toos"
-	echo "  --no-gui            skip installing gui programs"
-	echo "  --no-fonts          skip installing fonts"
+	echo "  --no-desktop        skip installing gui programs"
 	echo "  --no-sudoers        skip updating privileges"
-	echo "  --no-config         skip installing user config files"
+	echo "  --no-dots           skip installing user config files"
 	echo ""
 	echo "TESTING OPTIONS"
 	echo "  --mock              don't do anything, just print the steps"
 	echo ""
 }
 
-get_sudo() {
-	if [[ -n $sudox || $EUID = 0 ]]; then
-		return 0
-	fi
-
-	if ! sudo true; then
-		echoerr "Wrong password"
-		exit 69
-	fi
-
-	sudox="sudo"
-}
-
-## appends a line of text to a file
-append_to_file() {
-	local line="$1"
-	local file="$2"
-	local local_sudox="$3"
-
-	if [[ -z "$run" ]]; then
-		echo -e "$line" | $local_sudox tee -a $file >/dev/null
-	else
-		$run echo echo -e "$line" '|' $local_sudox tee -a $file
-	fi
-}
-
-## appends a line of text to a file only if it's not already there
-append_to_file_unique() {
-	local line="$1"
-	local file="$2"
-	local local_sudox="$3"
-
-	if ! $local_sudox grep -q "^$line\$" $file; then
-		append_to_file "$line" "$file" "$local_sudox"
-	fi
-}
-
-## resolves the directory of this script (following symlinks)
-print_dotfiles_dir() {
-	local source="${BASH_SOURCE[0]}"
-	local dir
-
-	while [ -h "$source" ]; do
-		# resolve $source until the file is no longer a symlink
-		dir="$(cd -P "$(dirname "$source")" && pwd)"
-		source="$(readlink "$source")"
-
-		# if $source was a relative symlink, we need to resolve it relative to the path
-		# where the symlink file was located
-		[[ $source != /* ]] && source="$dir/$source"
-	done
-
-	dir="$(cd -P "$(dirname "$source")" && pwd)"
-	echo "$dir"
-}
 
 update_os() {
 	get_sudo
-	$run $sudox apt update -y
-	$run $sudox apt dist-upgrade -y
+	$run $sudox pacman -Syyu --noconfirm
 }
 
 install_cli_tools() {
@@ -214,6 +145,63 @@ install_fonts() {
 	$run fc-cache -fr
 }
 
+install_desktop() {
+	echo "> Installing YAY..."
+	$run $sudox pacman -S --noconfirm --needed git base-devel
+	$run git clone https://aur.archlinux.org/yay.git && cd yay
+	$run makepkg --noconfirm -si && cd ..
+
+	## make sure a directory for bash completions exists
+	local bash_completions_dir="$HOME/.local/share/bash-completion/completions"
+	$run mkdir -p "$bash_completions_dir"
+
+	echo "> Installing cli tools..."
+	$run $sudox pacman -S --noconfirm neovim tar lsd git git-lfs tldr python3 curl wget cmake nodejs npm net-tools cifs-utils htop tmux ranger imagemagick os-prober xdotool xclip entr fastfetch jq starship bat ripgrep git-delta
+
+	echo "> Installing audio and brightness tools..."
+	$run $sudox pacman -S --noconfirm pipewire wireplumber pamixer brightnessctl
+
+	echo "> Installing Fonts..."
+	$run $sudox pacman -S --noconfirm ttf-cascadia-code-nerd ttf-cascadia-mono-nerd ttf-fira-code ttf-fira-mono ttf-fira-sans ttf-firacode-nerd ttf-iosevka-nerd ttf-iosevkaterm-nerd ttf-jetbrains-mono-nerd ttf-jetbrains-mono ttf-nerd-fonts-symbols ttf-nerd-fonts-symbols ttf-nerd-fonts-symbols-mono
+
+	echo "> Installing and enabling SDDM..."
+	$run $sudox pacman -S --noconfirm sddm
+	$run $sudox systemctl enable sddm.service
+
+	echo "> Installing terminal emulator..."
+	$run $sudox pacman -S --noconfirm kitty
+	
+	echo "> Installing Hyprland..."
+	$run $sudox pacman -S --noconfirm hyprland xdg-desktop-portal-hyprland polkit-kde-agent dunst qt5-wayland qt6-wayland
+	$run $sudox pacman -S --noconfirm waybar cliphist
+	$run yay -S --sudoloop --noconfirm tofi swww hyprpicker hyprlock wlogout grimblast hypridle
+
+	$run $sudox pacman -S --noconfirm nwg-look qt5ct qt6ct kvantum
+
+	script_dir=$(safe_get_script_dir)
+
+	$run mkdir -p "$HOME/.config/assets/backgrounds"
+	$run cp -r "$script_dir/assets/backgrounds" "$HOME/.config/assets/"
+	$run cp -r "$script_dir/assets/wlogout" "$HOME/.config/assets/"
+
+	$run $sudox tar -xvf "$script_dir/assets/themes/Catppuccin-Mocha.tar.xz" -C /usr/share/themes/
+	$run $sudox tar -xvf "$script_dir/assets/icons/Tela-circle-dracula.tar.xz" -C /usr/share/icons/
+	$run yay -S --sudoloop --noconfirm kvantum-theme-catppuccin-git
+
+
+	echo "> Desktop apps..."
+	$run $sudox pacman -S --noconfirm nautilus firefox thunderbird libreoffice-fresh
+
+
+	echo
+	echo "Post-installation instructions:"
+	echo "-------------------------------"
+	echo "Set themes and icons:"
+	echo "   - Run 'nwg-look' and  set the global GTK and icon theme"
+	echo "   - Open 'kvantummanager' (run with sudo for system-wide changes) to select and apply the Catppuccin theme"
+	echo "   - Open 'qt6ct' to set the icon theme"
+}
+
 update_sudoers() {
 	get_sudo
 
@@ -228,9 +216,9 @@ update_sudoers() {
 	done
 }
 
-install_configs() {
-	local dir=$(print_dotfiles_dir)
-	local files="vimrc vim ideavimrc bash_aliases bash_extra bin config/tmux config/nvim config/starship.toml config/ranger/rc.config config/i3 config/polybar config/rofi config/kitty config/picom config/hypr config/tofi config/waybar config/gtk-3.0 config/gtk-4.0 config/assets config/wlogout config/xsettingsd"
+install_dots() {
+	local dir=$(safe_get_script_dir)
+	local files="vimrc vim ideavimrc bash_aliases bash_extra bin config/tmux config/nvim config/starship.toml config/ranger/rc.config config/i3 config/polybar config/rofi config/kitty config/picom config/hypr config/tofi config/waybar config/gtk-3.0 config/gtk-4.0 config/wlogout config/xsettingsd"
 	local backup_dir="$dir-$(date "+%Y-%m-%d-%H%M")"
 
 	## pull submodules
@@ -272,11 +260,9 @@ install_configs() {
 error=""
 need_help=0
 need_update_os=0
-need_install_cli=0
-need_install_gui=0
-need_install_fonts=0
+need_desktop=0
 need_sudoers=0
-need_config=0
+need_dots=0
 
 parse_args() {
 	if [[ $# -eq 0 ]]; then
@@ -284,11 +270,9 @@ parse_args() {
 		return 0
 	fi
 
-	local no_install_cli=0
-	local no_install_gui=0
-	local no_install_fonts=0
+	local no_desktop=0
 	local no_sudoers=0
-	local no_config=0
+	local no_dots=0
 
 	while [[ $# -gt 0 ]]; do
 		case $1 in
@@ -297,30 +281,12 @@ parse_args() {
 				return 0
 				;;
 
-			--cli)
-				need_install_cli=1
+			--desktop)
+				need_desktop=1
 				shift
 				;;
-			--no-cli)
-				no_install_cli=1
-				shift
-				;;
-
-			--gui)
-				need_install_gui=1
-				shift
-				;;
-			--no-gui)
-				no_install_gui=1
-				shift
-				;;
-
-			--fonts)
-				need_install_fonts=1
-				shift
-				;;
-			--no-fonts)
-				no_install_fonts=1
+			--no-desktop)
+				no_desktop=1
 				shift
 				;;
 
@@ -333,21 +299,19 @@ parse_args() {
 				shift
 				;;
 
-			--config)
-				need_config=1
+			--dots)
+				need_dots=1
 				shift
 				;;
-			--no-config)
-				no_config=1
+			--no-dots)
+				no_dots=1
 				shift
 				;;
 
 			-a|--all)
-				need_install_cli=1
-				need_install_gui=1
-				need_install_fonts=1
+				need_desktop=1
 				need_sudoers=1
-				need_config=1
+				need_dots=1
 				shift
 				;;
 
@@ -364,15 +328,9 @@ parse_args() {
 		esac
 	done
 
-	need_install_cli=$(($need_install_cli-$no_install_cli))
-	need_install_gui=$(($need_install_gui-$no_install_gui))
-	need_install_fonts=$(($need_install_fonts-$no_install_fonts))
+	need_gui=$(($need_desktop-$no_desktop))
 	need_sudoers=$(($need_sudoers-$no_sudoers))
-	need_config=$(($need_config-$no_config))
-
-	if [[ $need_install_cli -eq 1 || $need_install_gui -eq 1 || $need_install_fonts -eq 1 ]]; then
-		need_update_os=1
-	fi
+	need_dots=$(($need_dots-$no_dots))
 }
 
 main() {
@@ -391,27 +349,15 @@ main() {
 
 	set -e
 
-	if [[ $need_update_os -eq 1 ]]; then
+	if [[ $need_desktop -eq 1 ]]; then
 		echo "--- Updating the system ------------------------------------"
 		update_os
 		echo ""
 	fi
 
-	if [[ $need_install_cli -eq 1 ]]; then
-		echo "--- Installing CLI tools -----------------------------------"
-		install_cli_tools
-		echo ""
-	fi
-
-	if [[ $need_install_gui -eq 1 ]]; then
+	if [[ $need_desktop -eq 1 ]]; then
 		echo "--- Installing GUI tools -----------------------------------"
-		install_gui_tools
-		echo ""
-	fi
-
-	if [[ $need_install_fonts -eq 1 ]]; then
-		echo "--- Installing fonts ---------------------------------------"
-		install_fonts
+		install_desktop
 		echo ""
 	fi
 
@@ -421,9 +367,9 @@ main() {
 		echo ""
 	fi
 
-	if [[ $need_config -eq 1 ]]; then
+	if [[ $need_dots -eq 1 ]]; then
 		echo "--- Copying config files -----------------------------------"
-		install_configs
+		install_dots
 		echo ""
 	fi
 }
