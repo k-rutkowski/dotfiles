@@ -5,6 +5,10 @@ PATH=$HOME/.local/bin:$HOME/.bin:$HOME/bin:$HOME/scripts:$HOME/.apps:$PATH
 eval "$(starship init bash)"
 eval "$(zoxide init bash)"
 
+if [ -f ~/.bash_aliases ]; then
+    . ~/.bash_aliases
+fi
+
 if [ -f ~/.bash_secret ]; then
     . ~/.bash_secret
 fi
