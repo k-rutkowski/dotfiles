@@ -156,7 +156,7 @@ install_desktop() {
 	$run mkdir -p "$bash_completions_dir"
 
 	echo "> Installing cli tools..."
-	$run $sudox pacman -S --noconfirm neovim tar lsd git git-lfs tldr python3 curl wget cmake nodejs npm net-tools cifs-utils htop tmux ranger imagemagick os-prober xdotool xclip entr fastfetch jq starship bat ripgrep git-delta
+	$run $sudox pacman -S --noconfirm neovim tar lsd git git-lfs tldr python3 curl wget cmake nodejs npm net-tools cifs-utils htop tmux ranger imagemagick os-prober xdotool xclip entr fastfetch jq starship bat zoxide ripgrep git-delta zip
 
 	echo "> Installing audio and brightness tools..."
 	$run $sudox pacman -S --noconfirm pipewire wireplumber pamixer brightnessctl
@@ -192,14 +192,28 @@ install_desktop() {
 	echo "> Desktop apps..."
 	$run $sudox pacman -S --noconfirm nautilus firefox thunderbird libreoffice-fresh
 
+	# spotify
+	$run yay -S --sudoloop --noconfirm spotify
+
+	# nextcloud
+	$run yay -S --sudoloop --noconfirm nextcloud-client
+
+	# dropbox
+	$run yay -S --sudoloop --noconfirm libappindicator-gtk2 libappindicator-gtk3 dropbox dropbox-cli nautilus-dropbox
 
 	echo
 	echo "Post-installation instructions:"
 	echo "-------------------------------"
+	echo
 	echo "Set themes and icons:"
 	echo "   - Run 'nwg-look' and  set the global GTK and icon theme"
 	echo "   - Open 'kvantummanager' (run with sudo for system-wide changes) to select and apply the Catppuccin theme"
 	echo "   - Open 'qt6ct' to set the icon theme"
+	echo
+	echo "Nextcloud:"
+	echo "   - First, login to nextcloud account in a browser"
+	echo "   - Run Nextcloud Desktop and proceed to connect"
+	echo
 }
 
 update_sudoers() {
