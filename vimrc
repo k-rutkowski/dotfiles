@@ -30,7 +30,7 @@ set title
 set number
 set relativenumber
 set ruler
-set wrap
+" set wrap
 set linebreak
 set scrolloff=3
 set guioptions=T
