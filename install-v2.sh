@@ -156,10 +156,17 @@ install_desktop() {
 	$run mkdir -p "$bash_completions_dir"
 
 	echo "> Installing cli tools..."
-	$run $sudox pacman -S --noconfirm neovim tar lsd git git-lfs tldr python3 curl wget cmake nodejs npm net-tools cifs-utils htop tmux ranger imagemagick os-prober xdotool xclip entr fastfetch jq starship bat zoxide ripgrep git-delta zip
+	$run $sudox pacman -S --noconfirm neovim tar lsd git git-lfs tldr python3 curl wget cmake nodejs npm net-tools cifs-utils htop tmux ranger imagemagick os-prober xdotool xclip entr fastfetch jq starship bat zoxide ripgrep git-delta
+	$run $sudox pacman -S --noconfirm zip unzip p7zip
+
+	$run $sudox pacman -S --noconfirm bash-completion
 
 	echo "> Installing audio and brightness tools..."
 	$run $sudox pacman -S --noconfirm pipewire wireplumber pamixer brightnessctl
+
+	echo "> Installing bluetooth tools..."
+	$run $sudox pacman -S --noconfirm bluez bluez-utils blueman
+	$run $sudox systemctl enable bluetooth
 
 	echo "> Installing Fonts..."
 	$run $sudox pacman -S --noconfirm ttf-cascadia-code-nerd ttf-cascadia-mono-nerd ttf-fira-code ttf-fira-mono ttf-fira-sans ttf-firacode-nerd ttf-iosevka-nerd ttf-iosevkaterm-nerd ttf-jetbrains-mono-nerd ttf-jetbrains-mono ttf-nerd-fonts-symbols ttf-nerd-fonts-symbols ttf-nerd-fonts-symbols-mono
@@ -190,7 +197,11 @@ install_desktop() {
 
 
 	echo "> Desktop apps..."
-	$run $sudox pacman -S --noconfirm nautilus firefox thunderbird libreoffice-fresh
+	#$run $sudox pacman -S --noconfirm nautilus nautilus-share
+	$run $sudox pacman -S --noconfirm thunar thunar-archive-plugin thunar-media-tags-plugin thunar-shares-plugin
+	$run $sudox pacman -S --noconfirm firefox thunderbird libreoffice-fresh
+	$run $sudox pacman -S --noconfirm vlc vlc-plugin-ffmpeg vlc-plugin-x264 vlc-plugin-x265 
+	$run $sudox pacman -S --noconfirm transmission-cli transmission-gtk
 
 	# spotify
 	$run yay -S --sudoloop --noconfirm spotify
@@ -200,6 +211,15 @@ install_desktop() {
 
 	# dropbox
 	$run yay -S --sudoloop --noconfirm libappindicator-gtk2 libappindicator-gtk3 dropbox dropbox-cli nautilus-dropbox
+
+	# slack
+	$run yay -S --sudoloop --noconfirm slack-desktop
+
+	# steam
+	$run $sudox pacman -S --noconfirm steam-installer steam
+
+	# backup solutions
+	# $run yay -S  --sudoloop --noconfirm timeshift    ## todo: investigate
 
 	echo
 	echo "Post-installation instructions:"
@@ -213,6 +233,12 @@ install_desktop() {
 	echo "Nextcloud:"
 	echo "   - First, login to nextcloud account in a browser"
 	echo "   - Run Nextcloud Desktop and proceed to connect"
+	echo
+	echo "To install steam:"
+	echo "   - Edit /etc/pacman.conf - uncomment the [multilib] section"
+	echo "   - Run 'sudo pacman -Syyu' to update the package database"
+	echo "   - Run 'sudo pacman -S steam' to install steam"
+	echo "   - When asked for provider for vulkan-driver, select the appropriate one for your GPU"
 	echo
 }
 
