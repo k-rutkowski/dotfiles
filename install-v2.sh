@@ -36,115 +36,6 @@ update_os() {
 	$run $sudox pacman -Syyu --noconfirm
 }
 
-install_cli_tools() {
-	## apt packages
-	get_sudo
-	$run $sudox dpkg --add-architecture i386
-	update_os
-
-	echo "> core packages..."
-	$run $sudox apt install -y lsd git git-doc git-lfs git-man tldr python3 python3-pip python3-venv python-is-python3 curl wget nfs-common clang-tools clang-tidy clang-format g++ g++-multilib cmake nodejs npm net-tools libfuse2 cifs-utils htop rename tmux ranger p7zip-full imagemagick wifi-qr os-prober xdotool xclip entr neofetch software-properties-common apt-transport-https playerctl pulseaudio-utils pulsemixer jq
-	$run $sudox apt autoremove -y
-
-	## make sure a directory for bash completions exists
-	local bash_completions_dir="$HOME/.local/share/bash-completion/completions"
-	$run mkdir -p "$bash_completions_dir"
-
-	## fuzzy finder
-	echo "> fzf..."
-	$run rm -rf "$HOME/.fzf"
-	$run git clone --depth 1 https://github.com/junegunn/fzf.git "$HOME/.fzf"
-	$run "$HOME/.fzf/install" --all
-
-	## neovim
-	echo "> neovim..."
-	$run $sudox snap install nvim --classic
-	$run $sudox update-alternatives --install /usr/bin/editor editor /snap/bin/nvim 1111
-	$run $sudox snap alias nvim editor
-
-	## rust
-	echo "> rust..."
-	$run curl --proto '=https' --tlsv1.2 -sSf -o /tmp/rustup-install.sh https://sh.rustup.rs
-	$run sh /tmp/rustup-install.sh -y
-	$run rm /tmp/rustup-install.sh
-	$run source "$HOME/.cargo/env"
-	$run rustup completions bash > "$bash_completions_dir/rustup"
-
-	## better cd
-	echo "> zoxide..."
-	$run curl -sS -o /tmp/zoxide-install.sh https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh
-	$run bash /tmp/zoxide-install.sh
-	$run rm /tmp/zoxide-install.sh
-
-	## starship prompt, better ls, better cat, better grep, better du, better git diff
-	echo "> better coreutils..."
-	$run cargo install starship bat ripgrep du-dust git-delta
-
-	echo "> macropad programming tool..."
-	$run cargo install ch57x-keyboard-tool
-
-	## flathub
-	$run $sudox apt install -y flatpak
-	$run $sudox flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
-}
-
-install_gui_tools() {
-	get_sudo
-
-	## window manager, terminal emulator, file manager
-	$run $sudox apt install -y i3 polybar rofi kitty arandr picom lxappearance gtk-chtheme nitrogen papirus-icon-theme shutter xautolock thunar
-
-	## device managers
-	$run $sudox apt install -y pavucontrol blueman policykit-1-gnome
-
-	## some useful tools
-	$run $sudox apt install -y qemu-kvm virt-manager screenkey
-
-	## multimedia
-	$run $sudox apt install -y vlc smplayer v4l2loopback-dkms v4l2loopback-utils
-
-	## make kitty the default terminal
-	$run $sudox update-alternatives --set x-terminal-emulator "$(which kitty)"
-
-	## email client, spotify, slack
-	$run $sudox snap install thunderbird libreoffice slack
-
-	## steam
-	$run $sudox apt install -y steam-installer steam-devices
-
-	## epic
-	$run flatpak install -y flathub io.github.achetagames.epic_asset_manager
-
-	$run flatpak install -y spotify
-}
-
-install_fonts() {
-	get_sudo
-
-	$run $sudox apt install fonts-font-awesome
-
-	## accept mscorefonts eula
-	echo ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true | $run $sudox debconf-set-selections
-	echo ttf-mscorefonts-installer msttcorefonts/present-mscorefonts-eula note | $run $sudox debconf-set-selections
-
-	## install microsoft fonts
-	$run $sudox apt install -y ttf-mscorefonts-installer
-	$run $sudox apt autoremove -y
-
-	## download and install Nerd fonts
-	local fonts="CascadiaCode JetBrainsMono"
-	$run mkdir -p  "$HOME/.local/share/fonts"
-	for font in $fonts; do
-		$run rm -fr "/tmp/$font" "/tmp/$font.zip"
-		$run curl -sS -L -o "/tmp/$font.zip" "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/$font.zip"
-		$run unzip "/tmp/$font.zip" -d "/tmp/$font"
-		$run cp -f /tmp/$font/*.ttf $HOME/.local/share/fonts/
-		$run rm -fr "/tmp/$font" "/tmp/$font.zip"
-	done
-
-	$run fc-cache -fr
-}
-
 install_desktop() {
 	echo "> Installing YAY..."
 	$run $sudox pacman -S --noconfirm --needed git base-devel
@@ -156,10 +47,13 @@ install_desktop() {
 	$run mkdir -p "$bash_completions_dir"
 
 	echo "> Installing cli tools..."
-	$run $sudox pacman -S --noconfirm neovim tar lsd git git-lfs tldr python3 curl wget cmake nodejs npm net-tools cifs-utils htop tmux ranger imagemagick os-prober xdotool xclip entr fastfetch jq starship bat zoxide ripgrep git-delta
+	$run $sudox pacman -S --noconfirm neovim tar lsd less git git-lfs tldr python3 curl wget cmake nodejs npm net-tools cifs-utils htop tmux ranger imagemagick os-prober xdotool xclip entr fastfetch jq starship bat zoxide ripgrep git-delta
 	$run $sudox pacman -S --noconfirm zip unzip p7zip
 
 	$run $sudox pacman -S --noconfirm bash-completion
+
+	$run $sudox pacman -S --noconfirm rustup
+	$run rustup default stable
 
 	echo "> Installing audio and brightness tools..."
 	$run $sudox pacman -S --noconfirm pipewire wireplumber pamixer brightnessctl
@@ -178,12 +72,15 @@ install_desktop() {
 	echo "> Installing terminal emulator..."
 	$run $sudox pacman -S --noconfirm kitty
 	
-	echo "> Installing Hyprland..."
+	echo "> Installing desktop environment..."
 	$run $sudox pacman -S --noconfirm hyprland xdg-desktop-portal-hyprland polkit-kde-agent dunst qt5-wayland qt6-wayland
 	$run $sudox pacman -S --noconfirm waybar cliphist
-	$run yay -S --sudoloop --noconfirm tofi swww hyprpicker hyprlock wlogout grimblast hypridle
+	$run yay -S --sudoloop --noconfirm tofi swww hyprpicker hyprlock wlogout hypridle
 
 	$run $sudox pacman -S --noconfirm nwg-look qt5ct qt6ct kvantum
+
+	echo "> Installing screenshot tools..."
+	$run yay -S --sudoloop --noconfirm grimblast gradia
 
 	script_dir=$(safe_get_script_dir)
 
