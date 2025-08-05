@@ -47,13 +47,16 @@ install_desktop() {
 	$run mkdir -p "$bash_completions_dir"
 
 	echo "> Installing cli tools..."
-	$run $sudox pacman -S --noconfirm neovim tar lsd less git git-lfs tldr python3 curl wget cmake nodejs npm net-tools cifs-utils htop tmux ranger imagemagick os-prober xdotool xclip entr fastfetch jq starship bat zoxide ripgrep git-delta
+	$run $sudox pacman -S --noconfirm neovim tar less bc htop cifs-utils net-tools 
+	$run $sudox pacman -S --noconfirm git git-lfs tldr python3 curl wget cmake nodejs npm tmux ranger imagemagick os-prober xdotool xclip entr fastfetch jq lsd bat zoxide ripgrep git-delta
 	$run $sudox pacman -S --noconfirm zip unzip p7zip
 
 	$run $sudox pacman -S --noconfirm bash-completion
 
 	$run $sudox pacman -S --noconfirm rustup
 	$run rustup default stable
+
+	$run $sudox pacman -S --noconfirm starship
 
 	echo "> Installing audio and brightness tools..."
 	$run $sudox pacman -S --noconfirm pipewire wireplumber pamixer brightnessctl
