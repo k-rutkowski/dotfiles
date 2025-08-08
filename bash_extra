@@ -1,5 +1,8 @@
 set -o vi
 
+export VISUAL=nvim
+export EDITOR=nvim
+
 PATH=$HOME/.local/bin:$HOME/.bin:$HOME/bin:$HOME/scripts:$HOME/.apps:$PATH
 
 eval "$(starship init bash)"
