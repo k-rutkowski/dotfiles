@@ -13,19 +13,6 @@ fi
 echoerr() { printf "%s%s%s\n" "$print_style_error" "$*" "$print_style_reset"; }
 mockrun() { printf "%s%s%s\n" "$print_style_mock" "$*" "$print_style_reset"; }
 
-get_sudo() {
-	if [[ -n $sudox || $EUID = 0 ]]; then
-		return 0
-	fi
-
-	if ! sudo true; then
-		echoerr "Wrong password"
-		exit 69
-	fi
-
-	sudox="sudo"
-}
-
 ## appends a line of text to a file
 append_to_file() {
 	local line="$1"

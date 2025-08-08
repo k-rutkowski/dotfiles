@@ -8,6 +8,26 @@ run=""
 sudox=""
 
 
+get_sudo() {
+	if [[ -n $sudox || $EUID = 0 ]]; then
+		return 0
+	fi
+
+	sudo -v
+
+	if ! sudo true; then
+		echoerr "Wrong password"
+		exit 69
+	fi
+
+	(while true; do sudo -n true; sleep 60; done) &
+	SUDO_PID=$!
+	trap "kill $SUDO_PID 2>/dev/null || true" EXIT
+
+	sudox="sudo"
+}
+
+
 help() {
 	echo "USAGE: $script_name [OPTION...]"
 	echo
@@ -37,6 +57,12 @@ update_os() {
 }
 
 install_desktop() {
+	get_sudo
+
+	echo "> Installing basic cli tools..."
+	$run $sudox pacman -S --noconfirm neovim tar less bc htop cifs-utils net-tools git git-lfs base-devel cmake make clang ninja
+	$run $sudox pacman -S --noconfirm tldr python3 curl wget nodejs npm tmux ranger imagemagick os-prober xdotool xclip entr fastfetch jq lsd bat zoxide ripgrep git-delta dust
+
 	echo "> Installing YAY..."
 	$run $sudox pacman -S --noconfirm --needed git base-devel
 	$run git clone https://aur.archlinux.org/yay.git && cd yay
@@ -46,9 +72,6 @@ install_desktop() {
 	local bash_completions_dir="$HOME/.local/share/bash-completion/completions"
 	$run mkdir -p "$bash_completions_dir"
 
-	echo "> Installing cli tools..."
-	$run $sudox pacman -S --noconfirm neovim tar less bc htop cifs-utils net-tools 
-	$run $sudox pacman -S --noconfirm git git-lfs tldr python3 curl wget cmake nodejs npm tmux ranger imagemagick os-prober xdotool xclip entr fastfetch jq lsd bat zoxide ripgrep git-delta
 	$run $sudox pacman -S --noconfirm zip unzip p7zip
 
 	$run $sudox pacman -S --noconfirm bash-completion
@@ -57,6 +80,9 @@ install_desktop() {
 	$run rustup default stable
 
 	$run $sudox pacman -S --noconfirm starship
+
+	echo "> Installing dependencies for various programs..."
+	$run $sudox pacman -S --noconfirm libxi libxrender libxtst mesa-utils fontconfig gtk3
 
 	echo "> Installing audio and brightness tools..."
 	$run $sudox pacman -S --noconfirm pipewire wireplumber pamixer brightnessctl
@@ -87,7 +113,7 @@ install_desktop() {
 
 	script_dir=$(safe_get_script_dir)
 
-	$run mkdir -p "$HOME/.config/assets/backgrounds"
+	$run mkdir -p "$HOME/.config/assets"
 	$run cp -r "$script_dir/assets/backgrounds" "$HOME/.config/assets/"
 	$run cp -r "$script_dir/assets/wlogout" "$HOME/.config/assets/"
 
@@ -103,6 +129,9 @@ install_desktop() {
 	$run $sudox pacman -S --noconfirm vlc vlc-plugin-ffmpeg vlc-plugin-x264 vlc-plugin-x265 
 	$run $sudox pacman -S --noconfirm transmission-cli transmission-gtk
 
+	# google-chrome
+	$run yay -S --sudoloop --noconfirm google-chrome
+	
 	# spotify
 	$run yay -S --sudoloop --noconfirm spotify
 
@@ -112,11 +141,20 @@ install_desktop() {
 	# dropbox
 	$run yay -S --sudoloop --noconfirm libappindicator-gtk2 libappindicator-gtk3 dropbox dropbox-cli nautilus-dropbox
 
+	# note taking
+	$run yay -S --sudoloop --noconfirm obsidian 
+
 	# slack
 	$run yay -S --sudoloop --noconfirm slack-desktop
 
 	# steam
-	$run $sudox pacman -S --noconfirm steam-installer steam
+	## todo: enable multilib repository before installing steam
+	#$run $sudox pacman -S --noconfirm steam
+
+	# vial (keyboard layout configuration)
+	$run yay -S --sudoloop --noconfirm vial
+	$run export USER_GID=`id -g`;
+	$run sudo --preserve-env=USER_GID sh -c 'echo "KERNEL==\"hidraw*\", SUBSYSTEM==\"hidraw\", MODE=\"0660\", GROUP=\"$USER_GID\", TAG+=\"uaccess\", TAG+=\"udev-acl\"" > /etc/udev/rules.d/92-viia.rules && udevadm control --reload && udevadm trigger'
 
 	# backup solutions
 	# $run yay -S  --sudoloop --noconfirm timeshift    ## todo: investigate
