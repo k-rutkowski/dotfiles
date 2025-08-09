@@ -51,6 +51,28 @@ help() {
 }
 
 
+add_samba_config_if_missing() {
+    local CONF=/etc/samba/smb.conf
+
+    # ensure file exists
+    $run $sudox test -f "$CONF" || $run $sudox bash -c "mkdir -p \$(dirname $CONF) && :> '$CONF'"
+
+    # if no [global] section, append the block
+    if ! grep -q '^\s*\[global\]' "$CONF"; then
+      $run $sudox tee -a "$CONF" > /dev/null <<'EOF'
+
+[global]
+  workgroup = WORKGROUP
+  server string = %h Samba Server
+  security = user
+  map to guest = Bad User
+EOF
+      echo "Appended [global] block to $CONF"
+    else
+      echo "[global] already present in $CONF — no changes made"
+    fi
+}
+
 update_os() {
 	get_sudo
 	$run $sudox pacman -Syyu --noconfirm
@@ -61,7 +83,10 @@ install_desktop() {
 
 	echo "> Installing basic cli tools..."
 	$run $sudox pacman -S --noconfirm neovim tar less bc htop cifs-utils net-tools git git-lfs base-devel cmake make clang ninja
-	$run $sudox pacman -S --noconfirm tldr python3 curl wget nodejs npm tmux ranger imagemagick os-prober xdotool xclip entr fastfetch jq lsd bat zoxide ripgrep git-delta dust
+	$run $sudox pacman -S --noconfirm tldr python3 curl wget nodejs npm tmux ranger imagemagick os-prober xdotool xclip entr fastfetch jq lsd bat zoxide ripgrep git-delta dust rsync
+	$run $sudox pacman -S --noconfirm gvfs-smb smbclient
+
+	$run git-lfs install
 
 	echo "> Installing YAY..."
 	$run $sudox pacman -S --noconfirm --needed git base-devel
@@ -85,7 +110,7 @@ install_desktop() {
 	$run $sudox pacman -S --noconfirm libxi libxrender libxtst mesa-utils fontconfig gtk3
 
 	echo "> Installing audio and brightness tools..."
-	$run $sudox pacman -S --noconfirm pipewire wireplumber pamixer brightnessctl
+	$run $sudox pacman -S --noconfirm pipewire pipewire-pulse pipewire-alsa pipewire-jack pavucontrol wireplumber pamixer brightnessctl
 
 	echo "> Installing bluetooth tools..."
 	$run $sudox pacman -S --noconfirm bluez bluez-utils blueman
@@ -121,6 +146,9 @@ install_desktop() {
 	$run $sudox tar -xvf "$script_dir/assets/icons/Tela-circle-dracula.tar.xz" -C /usr/share/icons/
 	$run yay -S --sudoloop --noconfirm kvantum-theme-catppuccin-git
 
+	# alternative package manager
+	$run $sudox pacman -S --noconfirm flatpak
+	$run flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 
 	echo "> Desktop apps..."
 	#$run $sudox pacman -S --noconfirm nautilus nautilus-share
@@ -147,14 +175,26 @@ install_desktop() {
 	# slack
 	$run yay -S --sudoloop --noconfirm slack-desktop
 
-	# steam
-	## todo: enable multilib repository before installing steam
-	#$run $sudox pacman -S --noconfirm steam
+	# ide
+	$run yay -S --sudoloop --noconfirm rider
 
 	# vial (keyboard layout configuration)
 	$run yay -S --sudoloop --noconfirm vial
 	$run export USER_GID=`id -g`;
 	$run sudo --preserve-env=USER_GID sh -c 'echo "KERNEL==\"hidraw*\", SUBSYSTEM==\"hidraw\", MODE=\"0660\", GROUP=\"$USER_GID\", TAG+=\"uaccess\", TAG+=\"udev-acl\"" > /etc/udev/rules.d/92-viia.rules && udevadm control --reload && udevadm trigger'
+
+	$run add_samba_config_if_missing
+
+	# game development
+	$run flatpak install flathub io.github.achetagames.epic_asset_manager
+
+	# gaming
+	$run yay -S --sudoloop --noconfirm heroic-games-launcher
+
+	# steam
+	## todo: enable multilib repository before installing steam
+	#$run $sudox pacman -S --noconfirm steam
+
 
 	# backup solutions
 	# $run yay -S  --sudoloop --noconfirm timeshift    ## todo: investigate
