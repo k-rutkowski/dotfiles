@@ -127,7 +127,7 @@ install_desktop() {
 	$run $sudox pacman -S --noconfirm kitty
 	
 	echo "> Installing desktop environment..."
-	$run $sudox pacman -S --noconfirm hyprland xdg-desktop-portal-hyprland polkit-kde-agent dunst qt5-wayland qt6-wayland
+	$run $sudox pacman -S --noconfirm hyprland xdg-desktop-portal-hyprland polkit-kde-agent dunst qt5-wayland qt6-wayland xorg-wayland
 	$run $sudox pacman -S --noconfirm waybar cliphist
 	$run yay -S --sudoloop --noconfirm tofi swww hyprpicker hyprlock wlogout hypridle
 

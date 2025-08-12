@@ -122,17 +122,17 @@
         "states": {
             "c": 90, // critical
             "h": 60, // high
-            "m": 30 // medium
+            "m": 20  // medium
         },
         "interval": 10,
-        "format": "󰾆 {used}GB",
-        "format-m": "󰾅 {used}GB",
-        "format-h": "󰓅 {used}GB",
-        "format-c": " {used}GB",
+        "format": "󰾆 {used:0.2} GB",
+        "format-m": "󰾅 {used:0.2} GB",
+        "format-h": "󰓅 {used:0.2} GB",
+        "format-c": " {used:0.2} GB",
         "format-alt": "󰾆 {percentage}%",
         "max-length": 10,
         "tooltip": true,
-        "tooltip-format": "󰾆 {percentage}%\n {used:0.1f}GB/{total:0.1f}GB"
+        "tooltip-format": "󰾆 {percentage}%\n {used:0.1f}GB/{total:0.0f}GB"
     },
 
     "cpu": {
