@@ -1,10 +1,13 @@
-width = 100%
-height = 100%
+anchor = center
+width = 30%
+height = 40%
 border-width = 0
-outline-width = 0
-padding-left = 39%
-padding-top = 30%
-result-spacing = 20
+outline-width = 1
+padding-left = 4%
+padding-right = 4%
+padding-top = 4%
+padding-bottom = 4%
+result-spacing = 16
 num-results = 8
 
 font = JetBrainsMono Nerd Font
@@ -14,5 +17,5 @@ text-color = #4e4e5f
 
 prompt-text = " : "
 
-background-color = #11111bd9
+background-color = #11111bf0
 selection-color = #83A4E7

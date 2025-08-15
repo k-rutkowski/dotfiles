@@ -138,10 +138,6 @@ install_desktop() {
 
 	script_dir=$(safe_get_script_dir)
 
-	$run mkdir -p "$HOME/.config/assets"
-	$run cp -r "$script_dir/assets/backgrounds" "$HOME/.config/assets/"
-	$run cp -r "$script_dir/assets/wlogout" "$HOME/.config/assets/"
-
 	$run $sudox tar -xvf "$script_dir/assets/themes/Catppuccin-Mocha.tar.xz" -C /usr/share/themes/
 	$run $sudox tar -xvf "$script_dir/assets/icons/Tela-circle-dracula.tar.xz" -C /usr/share/icons/
 	$run yay -S --sudoloop --noconfirm kvantum-theme-catppuccin-git
@@ -270,6 +266,12 @@ install_dots() {
 	$run touch $HOME/.gitconfig
 	append_to_file_unique "[include]\n\t$import_gitconfig_line" "$HOME/.gitconfig"
 
+	## copy assets
+	$run mkdir -p "$HOME/.config/assets"
+	$run cp -r "$dir/assets/backgrounds" "$HOME/.config/assets/"
+	$run cp -r "$dir/assets/wlogout" "$HOME/.config/assets/"
+
+	## hopefully everyghing to this point went smoothly
 	echo "Completed."
 }
 
