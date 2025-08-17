@@ -246,7 +246,7 @@ update_sudoers() {
 
 install_dots() {
 	local dir=$(safe_get_script_dir)
-	local files="vimrc vim ideavimrc bash_aliases bash_extra bin config/tmux config/nvim config/starship.toml config/ranger/rc.config config/i3 config/polybar config/rofi config/kitty config/picom config/hypr config/tofi config/waybar config/gtk-3.0/settings.ini config/gtk-4.0/settings.ini config/wlogout config/xsettingsd"
+	local files="vimrc vim ideavimrc bash_aliases bash_extra bin config/tmux config/nvim config/starship.toml config/ranger/rc.config config/i3 config/polybar config/rofi config/kitty config/picom config/hypr config/tofi config/waybar config/gtk-3.0/settings.ini config/gtk-4.0/settings.ini config/wlogout config/dunst config/xsettingsd"
 	local backup_dir="$dir-$(date "+%Y-%m-%d-%H%M")"
 
 	## pull submodules
