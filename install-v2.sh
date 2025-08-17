@@ -141,10 +141,14 @@ install_desktop() {
 	$run $sudox tar -xvf "$script_dir/assets/themes/Catppuccin-Mocha.tar.xz" -C /usr/share/themes/
 	$run $sudox tar -xvf "$script_dir/assets/icons/Tela-circle-dracula.tar.xz" -C /usr/share/icons/
 	$run yay -S --sudoloop --noconfirm kvantum-theme-catppuccin-git
+	$run yay -S --sudoloop --noconfirm archlinux-tweak-tool-git
+
+	$run yay -S --sudoloop --noconfirm sddm-silent-theme
 
 	# alternative package manager
 	$run $sudox pacman -S --noconfirm flatpak
 	$run flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+
 
 	echo "> Desktop apps..."
 	#$run $sudox pacman -S --noconfirm nautilus nautilus-share
@@ -200,9 +204,19 @@ install_desktop() {
 	echo "-------------------------------"
 	echo
 	echo "Set themes and icons:"
-	echo "   - Run 'nwg-look' and  set the global GTK and icon theme"
+	echo "   - Run 'nwg-look' and set the global GTK and icon theme"
 	echo "   - Open 'kvantummanager' (run with sudo for system-wide changes) to select and apply the Catppuccin theme"
 	echo "   - Open 'qt6ct' to set the icon theme"
+	echo
+	echo "Login manager theme:"
+	echo "   - Edit /etc/sddm.conf:"
+	echo "     * under [General] add:"
+	echo "        InputMethod=qtvirtualkeyboard"
+	echo "        GreeterEnvironment=QML2_IMPORT_PATH=/usr/share/sddm/themes/silent/components/,QT_IM_MODULE=qtvirtualkeyboard"
+	echo "     * under [Theme] add:"
+	echo "        Current=silent"
+	echo "   - Change ConfigFile in /usr/share/sddm/themes/silent"
+	echo "   - More details: https://github.com/uiriansan/SilentSDDM"
 	echo
 	echo "Nextcloud:"
 	echo "   - First, login to nextcloud account in a browser"
@@ -232,7 +246,7 @@ update_sudoers() {
 
 install_dots() {
 	local dir=$(safe_get_script_dir)
-	local files="vimrc vim ideavimrc bash_aliases bash_extra bin config/tmux config/nvim config/starship.toml config/ranger/rc.config config/i3 config/polybar config/rofi config/kitty config/picom config/hypr config/tofi config/waybar config/gtk-3.0 config/gtk-4.0 config/wlogout config/xsettingsd"
+	local files="vimrc vim ideavimrc bash_aliases bash_extra bin config/tmux config/nvim config/starship.toml config/ranger/rc.config config/i3 config/polybar config/rofi config/kitty config/picom config/hypr config/tofi config/waybar config/gtk-3.0/settings.ini config/gtk-4.0/settings.ini config/wlogout config/xsettingsd"
 	local backup_dir="$dir-$(date "+%Y-%m-%d-%H%M")"
 
 	## pull submodules
@@ -245,8 +259,14 @@ install_dots() {
 	if [[ -d $backup_dir ]]; then
 		$run rm -rf $backup_dir
 	fi
+
 	$run mkdir -p "$backup_dir/.config/ranger"
-	$run mkdir -p $HOME/.config/ranger
+	$run mkdir -p "$HOME/.config/ranger"
+	$run mkdir -p "$backup_dir/.config/gtk-3.0"
+	$run mkdir -p "$HOME/.config/gtk-3.0"
+	$run mkdir -p "$backup_dir/.config/gtk-4.0"
+	$run mkdir -p "$HOME/.config/gtk-4.0"
+
 	for fname in $files; do
 		file=$HOME/.$fname
 		if [[ -e $file ]]; then
@@ -270,6 +290,7 @@ install_dots() {
 	$run mkdir -p "$HOME/.config/assets"
 	$run cp -r "$dir/assets/backgrounds" "$HOME/.config/assets/"
 	$run cp -r "$dir/assets/wlogout" "$HOME/.config/assets/"
+	$run cp -r "$dir/assets/sounds" "$HOME/.config/assets/"
 
 	## hopefully everyghing to this point went smoothly
 	echo "Completed."

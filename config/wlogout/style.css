@@ -23,11 +23,11 @@ button {
 
 button:active,
 button:hover {
-    background-color: #cdd6f4;
+    background-color: #7d86a4;
 }
 
 button:focus {
-    background-color: #cdd6f4;
+    background-color: #4d5684;
 }
 
 #lock {
@@ -77,8 +77,8 @@ button:focus {
 
 #exit {
     background-image: image(url("/home/kr/.config/assets/wlogout/assets/restart.png"));
+    color: #cdd6f4;
     background-color: #11111b;
-
 }
 
 #exit:hover {
