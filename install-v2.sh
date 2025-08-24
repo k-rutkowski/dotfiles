@@ -117,7 +117,8 @@ install_desktop() {
 	$run $sudox systemctl enable bluetooth
 
 	echo "> Installing Fonts..."
-	$run $sudox pacman -S --noconfirm ttf-cascadia-code-nerd ttf-cascadia-mono-nerd ttf-fira-code ttf-fira-mono ttf-fira-sans ttf-firacode-nerd ttf-iosevka-nerd ttf-iosevkaterm-nerd ttf-jetbrains-mono-nerd ttf-jetbrains-mono ttf-nerd-fonts-symbols ttf-nerd-fonts-symbols ttf-nerd-fonts-symbols-mono
+	$run $sudox pacman -S --noconfirm ttf-cascadia-code-nerd ttf-cascadia-mono-nerd ttf-fira-code ttf-fira-mono ttf-fira-sans ttf-firacode-nerd ttf-iosevka-nerd ttf-iosevkaterm-nerd ttf-jetbrains-mono-nerd ttf-jetbrains-mono ttf-nerd-fonts-symbols ttf-nerd-fonts-symbols ttf-nerd-fonts-symbols-mono noto-fonts-cjk
+	$run fc-cache -fv
 
 	echo "> Installing and enabling SDDM..."
 	$run $sudox pacman -S --noconfirm sddm
@@ -150,12 +151,13 @@ install_desktop() {
 	$run flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 
 
-	echo "> Desktop apps..."
-	#$run $sudox pacman -S --noconfirm nautilus nautilus-share
+	echo "> Installing desktop apps..."
+	$run $sudox pacman -S --noconfirm nautilus nautilus-share nautilus-dropbox
 	$run $sudox pacman -S --noconfirm thunar thunar-archive-plugin thunar-media-tags-plugin thunar-shares-plugin
 	$run $sudox pacman -S --noconfirm firefox thunderbird libreoffice-fresh
 	$run $sudox pacman -S --noconfirm vlc vlc-plugin-ffmpeg vlc-plugin-x264 vlc-plugin-x265 
 	$run $sudox pacman -S --noconfirm transmission-cli transmission-gtk
+	#$run $sudox pacman -S --noconfirm slop
 
 	# google-chrome
 	$run yay -S --sudoloop --noconfirm google-chrome
@@ -167,7 +169,7 @@ install_desktop() {
 	$run yay -S --sudoloop --noconfirm nextcloud-client
 
 	# dropbox
-	$run yay -S --sudoloop --noconfirm libappindicator-gtk2 libappindicator-gtk3 dropbox dropbox-cli nautilus-dropbox
+	$run yay -S --sudoloop --noconfirm libappindicator-gtk2 libappindicator-gtk3 dropbox dropbox-cli
 
 	# note taking
 	$run yay -S --sudoloop --noconfirm obsidian 
@@ -182,6 +184,9 @@ install_desktop() {
 	$run yay -S --sudoloop --noconfirm vial
 	$run export USER_GID=`id -g`;
 	$run sudo --preserve-env=USER_GID sh -c 'echo "KERNEL==\"hidraw*\", SUBSYSTEM==\"hidraw\", MODE=\"0660\", GROUP=\"$USER_GID\", TAG+=\"uaccess\", TAG+=\"udev-acl\"" > /etc/udev/rules.d/92-viia.rules && udevadm control --reload && udevadm trigger'
+
+	echo "> macropad programming tool..."
+	$run cargo install ch57x-keyboard-tool
 
 	$run add_samba_config_if_missing
 

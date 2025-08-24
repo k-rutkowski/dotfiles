@@ -3,7 +3,7 @@ set -o vi
 export VISUAL=nvim
 export EDITOR=nvim
 
-PATH=$HOME/.local/bin:$HOME/.bin:$HOME/bin:$HOME/scripts:$HOME/.apps:$PATH
+PATH=$HOME/.local/bin:$HOME/.bin:$HOME/bin:$HOME/scripts:$HOME/.apps:$HOME/.cargo/bin:$PATH
 
 eval "$(starship init bash)"
 eval "$(zoxide init bash)"
