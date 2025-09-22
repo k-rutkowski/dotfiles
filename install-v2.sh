@@ -83,7 +83,7 @@ install_desktop() {
 
 	echo "> Installing basic cli tools..."
 	$run $sudox pacman -S --noconfirm neovim tar less bc htop cifs-utils net-tools git git-lfs base-devel cmake make clang ninja
-	$run $sudox pacman -S --noconfirm tldr python3 curl wget nodejs npm tmux ranger imagemagick os-prober xdotool xclip entr fastfetch jq lsd bat zoxide ripgrep git-delta dust rsync
+	$run $sudox pacman -S --noconfirm tldr python3 curl wget nodejs npm tmux ranger imagemagick os-prober xdotool xclip entr fastfetch jq lsd bat zoxide ripgrep fd git-delta dust rsync
 	$run $sudox pacman -S --noconfirm gvfs-smb smbclient
 
 	$run git-lfs install
@@ -154,11 +154,15 @@ install_desktop() {
 	echo "> Installing desktop apps..."
 	$run $sudox pacman -S --noconfirm nautilus nautilus-share nautilus-dropbox
 	$run $sudox pacman -S --noconfirm thunar thunar-archive-plugin thunar-media-tags-plugin thunar-shares-plugin
+	$run $sudox pacman -S --noconfirm kate
 	$run $sudox pacman -S --noconfirm firefox thunderbird libreoffice-fresh
 	$run $sudox pacman -S --noconfirm vlc vlc-plugin-ffmpeg vlc-plugin-x264 vlc-plugin-x265 
 	$run $sudox pacman -S --noconfirm transmission-cli transmission-gtk
 	#$run $sudox pacman -S --noconfirm slop
 
+	# image edition
+	$run yay -S --sudoloop --noconfirm pinta
+	
 	# google-chrome
 	$run yay -S --sudoloop --noconfirm google-chrome
 	
@@ -167,6 +171,9 @@ install_desktop() {
 
 	# nextcloud
 	$run yay -S --sudoloop --noconfirm nextcloud-client
+
+	# filen cloud storage
+	$run yay -S --sudoloop --noconfirm filen-desktop-bin
 
 	# dropbox
 	$run yay -S --sudoloop --noconfirm libappindicator-gtk2 libappindicator-gtk3 dropbox dropbox-cli
