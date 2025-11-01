@@ -83,7 +83,7 @@ install_desktop() {
 
 	echo "> Installing basic cli tools..."
 	$run $sudox pacman -S --noconfirm neovim tar less bc htop cifs-utils net-tools git git-lfs base-devel cmake make clang ninja
-	$run $sudox pacman -S --noconfirm tldr python3 curl wget nodejs npm tmux ranger imagemagick os-prober xdotool xclip entr fastfetch jq lsd bat zoxide ripgrep fd git-delta dust rsync
+	$run $sudox pacman -S --noconfirm tldr python3 curl wget nodejs npm tmux ranger imagemagick os-prober xdotool xclip entr fastfetch jq lsd bat zoxide ripgrep fd git-delta dust rsync trash-cli
 	$run $sudox pacman -S --noconfirm gvfs-smb smbclient
 
 	$run git-lfs install
@@ -132,33 +132,49 @@ install_desktop() {
 	$run $sudox pacman -S --noconfirm waybar cliphist
 	$run yay -S --sudoloop --noconfirm tofi swww hyprpicker hyprlock wlogout hypridle
 
+	echo "> Installing themes and theming tools..."
 	$run $sudox pacman -S --noconfirm nwg-look qt5ct qt6ct kvantum
-
-	echo "> Installing screenshot tools..."
-	$run yay -S --sudoloop --noconfirm grimblast gradia
-
 	script_dir=$(safe_get_script_dir)
-
 	$run $sudox tar -xvf "$script_dir/assets/themes/Catppuccin-Mocha.tar.xz" -C /usr/share/themes/
 	$run $sudox tar -xvf "$script_dir/assets/icons/Tela-circle-dracula.tar.xz" -C /usr/share/icons/
 	$run yay -S --sudoloop --noconfirm kvantum-theme-catppuccin-git
 	$run yay -S --sudoloop --noconfirm archlinux-tweak-tool-git
-
 	$run yay -S --sudoloop --noconfirm sddm-silent-theme
 
+	echo "> Installing screenshot tools..."
+	$run yay -S --sudoloop --noconfirm grimblast gradia
+
+	echo "> Installing clipboard manager..."
+	$run yay -S --sudoloop --noconfirm diodon
+
 	# alternative package manager
+	echo "> Installing alternative package manager..."
 	$run $sudox pacman -S --noconfirm flatpak
 	$run flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 
 
 	echo "> Installing desktop apps..."
-	$run $sudox pacman -S --noconfirm nautilus nautilus-share nautilus-dropbox
-	$run $sudox pacman -S --noconfirm thunar thunar-archive-plugin thunar-media-tags-plugin thunar-shares-plugin
+	$run $sudox pacman -S avahi
+	$run $sudox systemctl enable avahi-daemon.service
+
+	$run $sudox pacman -S --noconfirm nemo nemo-theme-glacier nemo-share nemo-preview nemo-image-converter nemo-filefoller nemo-audio-tab nemo-emblems
+	#$run $sudox pacman -S --noconfirm nautilus nautilus-share nautilus-dropbox
+	#$run $sudox pacman -S --noconfirm thunar thunar-archive-plugin thunar-media-tags-plugin thunar-shares-plugin
+	$run $sudox pacman -S --noconfirm viewnior
 	$run $sudox pacman -S --noconfirm kate
 	$run $sudox pacman -S --noconfirm firefox thunderbird libreoffice-fresh
 	$run $sudox pacman -S --noconfirm vlc vlc-plugin-ffmpeg vlc-plugin-x264 vlc-plugin-x265 
 	$run $sudox pacman -S --noconfirm transmission-cli transmission-gtk
-	#$run $sudox pacman -S --noconfirm slop
+
+	# echo "> Installing printing service..."
+	# $run $sudox pacman -S --noconfirm cups cups-pdf cups-pk-helper
+	# $run $sudox pacman -S --noconfirm ghostscript gsfonts
+	# $run $sudox pacman -S --noconfirm foomatic-db-engine foomatic-db-ppds foomatic-db-gutenprint-ppds foomatic-db-nonfree
+	# $run yay -S --sudoloop --noconfirm brother-hll2350dw
+	# $run $sudox systemctl enable cups.service
+	# $run $sudox systemctl start cups.service
+
+	echo "> Installing other stuff..."
 
 	# image edition
 	$run yay -S --sudoloop --noconfirm pinta
@@ -190,12 +206,10 @@ install_desktop() {
 	# vial (keyboard layout configuration)
 	$run yay -S --sudoloop --noconfirm vial
 	$run export USER_GID=`id -g`;
-	$run sudo --preserve-env=USER_GID sh -c 'echo "KERNEL==\"hidraw*\", SUBSYSTEM==\"hidraw\", MODE=\"0660\", GROUP=\"$USER_GID\", TAG+=\"uaccess\", TAG+=\"udev-acl\"" > /etc/udev/rules.d/92-viia.rules && udevadm control --reload && udevadm trigger'
+	$run sudo --preserve-env=USER_GID sh -c 'echo "KERNEL==\"hidraw*\", SUBSYSTEM==\"hidraw\", MODE=\"0660\", GROUP=\"$USER_GID\", TAG+=\"uaccess\", TAG+=\"udev-acl\"" > /etc/udev/rules.d/99-vial.rules && udevadm control --reload && udevadm trigger'
 
-	echo "> macropad programming tool..."
+	echo "> Installing macropad programming tool..."
 	$run cargo install ch57x-keyboard-tool
-
-	$run add_samba_config_if_missing
 
 	# game development
 	$run flatpak install flathub io.github.achetagames.epic_asset_manager
@@ -210,6 +224,10 @@ install_desktop() {
 
 	# backup solutions
 	# $run yay -S  --sudoloop --noconfirm timeshift    ## todo: investigate
+	#
+
+	echo "> Configuring samba..."
+	$run add_samba_config_if_missing
 
 	echo
 	echo "Post-installation instructions:"
