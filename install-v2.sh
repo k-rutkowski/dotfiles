@@ -83,7 +83,7 @@ install_desktop() {
 
 	echo "> Installing basic cli tools..."
 	$run $sudox pacman -S --noconfirm neovim tar less bc htop cifs-utils net-tools git git-lfs base-devel cmake make clang ninja
-	$run $sudox pacman -S --noconfirm tldr python3 curl wget nodejs npm tmux ranger imagemagick os-prober xdotool xclip entr fastfetch jq lsd bat zoxide ripgrep fd git-delta dust rsync trash-cli
+	$run $sudox pacman -S --noconfirm tldr python3 curl wget nodejs npm tmux ranger imagemagick os-prober xdotool xclip entr fastfetch jq lsd bat zoxide ripgrep fd git-delta dust rsync trash-cli lazygit
 	$run $sudox pacman -S --noconfirm gvfs-smb smbclient
 
 	$run git-lfs install
@@ -107,7 +107,7 @@ install_desktop() {
 	$run $sudox pacman -S --noconfirm starship
 
 	echo "> Installing dependencies for various programs..."
-	$run $sudox pacman -S --noconfirm libxi libxrender libxtst mesa-utils fontconfig gtk3
+	$run $sudox pacman -S --noconfirm ffmpeg libxi libxrender libxtst mesa-utils fontconfig gtk3
 
 	echo "> Installing audio and brightness tools..."
 	$run $sudox pacman -S --noconfirm pipewire pipewire-pulse pipewire-alsa pipewire-jack pavucontrol wireplumber pamixer brightnessctl
@@ -165,6 +165,7 @@ install_desktop() {
 	$run $sudox pacman -S --noconfirm firefox thunderbird libreoffice-fresh
 	$run $sudox pacman -S --noconfirm vlc vlc-plugin-ffmpeg vlc-plugin-x264 vlc-plugin-x265 
 	$run $sudox pacman -S --noconfirm transmission-cli transmission-gtk
+	$run $sudox pacman -S --noconfirm mission-center
 
 	# echo "> Installing printing service..."
 	# $run $sudox pacman -S --noconfirm cups cups-pdf cups-pk-helper
@@ -202,6 +203,9 @@ install_desktop() {
 
 	# ide
 	$run yay -S --sudoloop --noconfirm rider
+
+	# screen recording
+	$run $sudox pacman -S --noconfirm obs-studio
 
 	# vial (keyboard layout configuration)
 	$run yay -S --sudoloop --noconfirm vial
