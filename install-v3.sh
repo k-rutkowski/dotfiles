@@ -1,0 +1,420 @@
+#!/bin/bash
+
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+source $SCRIPT_DIR/helper.sh
+
+script_name=$0
+run=""
+sudox=""
+
+
+get_sudo() {
+	if [[ -n $sudox || $EUID = 0 ]]; then
+		return 0
+	fi
+
+	sudo -v
+
+	if ! sudo true; then
+		echoerr "Wrong password"
+		exit 69
+	fi
+
+	(while true; do sudo -n true; sleep 60; done) &
+	SUDO_PID=$!
+	trap "kill $SUDO_PID 2>/dev/null || true" EXIT
+
+	sudox="sudo"
+}
+
+
+help() {
+	echo "USAGE: $script_name [OPTION...]"
+	echo
+	echo "MAIN OPTIONS"
+	echo "  -h, --help          show help"
+	echo "  -a, --all           install and configure everyghing"
+	echo ""
+	echo "INCLUDE OPTIONS"
+	echo "  --desktop           install gui programs"
+	echo "  --sudoers           update user's privileges"
+	echo "  --dots              install user settings in \$HOME"
+	echo ""
+	echo "EXCLUDE OPTIONS"
+	echo "  --no-desktop        skip installing gui programs"
+	echo "  --no-sudoers        skip updating privileges"
+	echo "  --no-dots           skip installing user config files"
+	echo ""
+	echo "TESTING OPTIONS"
+	echo "  --mock              don't do anything, just print the steps"
+	echo ""
+}
+
+
+add_samba_config_if_missing() {
+    local CONF=/etc/samba/smb.conf
+
+    # ensure file exists
+    $run $sudox test -f "$CONF" || $run $sudox bash -c "mkdir -p \$(dirname $CONF) && :> '$CONF'"
+
+    # if no [global] section, append the block
+    if ! grep -q '^\s*\[global\]' "$CONF"; then
+      $run $sudox tee -a "$CONF" > /dev/null <<'EOF'
+
+[global]
+  workgroup = WORKGROUP
+  server string = %h Samba Server
+  security = user
+  map to guest = Bad User
+EOF
+      echo "Appended [global] block to $CONF"
+    else
+      echo "[global] already present in $CONF — no changes made"
+    fi
+}
+
+update_os() {
+	get_sudo
+	$run $sudox pacman -Syyu --noconfirm
+}
+
+install_desktop() {
+	get_sudo
+
+	echo "> Installing basic cli tools..."
+	$run $sudox pacman -S --noconfirm neovim tar less bc htop cifs-utils net-tools git git-lfs base-devel cmake make clang ninja
+	$run $sudox pacman -S --noconfirm python3 curl wget nodejs npm tmux ranger imagemagick os-prober xdotool xclip entr fastfetch jq lsd bat zoxide ripgrep fd git-delta dust rsync trash-cli lazygit
+	# $run $sudox pacman -S --noconfirm tldr
+	$run $sudox pacman -S --noconfirm gvfs-smb smbclient
+
+	$run git-lfs install
+
+	echo "> Installing YAY..."
+	$run $sudox pacman -S --noconfirm --needed git base-devel
+	$run git clone https://aur.archlinux.org/yay.git && cd yay
+	$run makepkg --noconfirm -si && cd ..
+
+	## make sure a directory for bash completions exists
+	local bash_completions_dir="$HOME/.local/share/bash-completion/completions"
+	$run mkdir -p "$bash_completions_dir"
+
+	$run $sudox pacman -S --noconfirm zip unzip p7zip
+
+	$run $sudox pacman -S --noconfirm bash-completion
+
+	$run $sudox pacman -S --noconfirm rustup
+	$run rustup default stable
+
+	$run $sudox pacman -S --noconfirm starship
+
+	# echo "> Installing audio and brightness tools..."
+	# $run $sudox pacman -S --noconfirm brightnessctl
+
+	echo "> Installing bluetooth tools..."
+	$run $sudox pacman -S --noconfirm bluez bluez-utils blueman
+	$run $sudox systemctl enable bluetooth
+
+	echo "> Installing Fonts..."
+	$run $sudox pacman -S --noconfirm ttf-cascadia-code-nerd ttf-cascadia-mono-nerd ttf-fira-code ttf-fira-mono ttf-fira-sans ttf-firacode-nerd ttf-iosevka-nerd ttf-iosevkaterm-nerd ttf-jetbrains-mono-nerd ttf-jetbrains-mono ttf-nerd-fonts-symbols ttf-nerd-fonts-symbols ttf-nerd-fonts-symbols-mono noto-fonts-cjk
+	$run fc-cache -fv
+
+	echo "> Installing themes and theming tools..."
+	$run $sudox pacman -S --noconfirm nwg-look qt5ct qt6ct kvantum
+	script_dir=$(safe_get_script_dir)
+	$run $sudox tar -xvf "$script_dir/assets/themes/Catppuccin-Mocha.tar.xz" -C /usr/share/themes/
+	$run $sudox tar -xvf "$script_dir/assets/icons/Tela-circle-dracula.tar.xz" -C /usr/share/icons/
+	$run yay -S --sudoloop --noconfirm kvantum-theme-catppuccin-git
+	$run yay -S --sudoloop --noconfirm archlinux-tweak-tool-git
+	$run yay -S --sudoloop --noconfirm sddm-silent-theme
+
+	# alternative package manager
+	echo "> Installing alternative package manager..."
+	$run $sudox pacman -S --noconfirm flatpak
+	$run flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+
+
+	echo "> Installing desktop apps..."
+	$run $sudox pacman -S --noconfirm nemo nemo-theme-glacier nemo-share nemo-image-converter nemo-fileroller nemo-audio-tab nemo-emblems
+	$run $sudox pacman -S --noconfirm viewnior
+	$run $sudox pacman -S --noconfirm kate
+	$run $sudox pacman -S --noconfirm firefox thunderbird libreoffice-fresh
+	$run $sudox pacman -S --noconfirm vlc vlc-plugin-ffmpeg vlc-plugin-x264 vlc-plugin-x265 
+	$run $sudox pacman -S --noconfirm transmission-cli transmission-gtk
+	$run $sudox pacman -S --noconfirm mission-center
+
+	echo "> Installing other stuff..."
+
+	# image edition
+	$run yay -S --sudoloop --noconfirm pinta
+	
+	# google-chrome
+	$run yay -S --sudoloop --noconfirm google-chrome
+	
+	# spotify
+	$run yay -S --sudoloop --noconfirm spotify
+
+	# nextcloud
+	$run yay -S --sudoloop --noconfirm nextcloud-client
+
+	# filen cloud storage
+	$run yay -S --sudoloop --noconfirm filen-desktop-bin
+
+	# dropbox
+	$run yay -S --sudoloop --noconfirm libappindicator-gtk2 libappindicator-gtk3 dropbox dropbox-cli
+
+	# note taking
+	$run yay -S --sudoloop --noconfirm obsidian 
+
+	# slack
+	$run yay -S --sudoloop --noconfirm slack-desktop
+
+	# ide
+	$run yay -S --sudoloop --noconfirm rider
+
+	# screen recording
+	$run $sudox pacman -S --noconfirm obs-studio
+
+	# vial (keyboard layout configuration)
+	$run yay -S --sudoloop --noconfirm vial
+	$run export USER_GID=`id -g`;
+	$run sudo --preserve-env=USER_GID sh -c 'echo "KERNEL==\"hidraw*\", SUBSYSTEM==\"hidraw\", MODE=\"0660\", GROUP=\"$USER_GID\", TAG+=\"uaccess\", TAG+=\"udev-acl\"" > /etc/udev/rules.d/99-vial.rules && udevadm control --reload && udevadm trigger'
+
+	echo "> Installing macropad programming tool..."
+	$run cargo install ch57x-keyboard-tool
+
+	# game development
+	$run flatpak install flathub io.github.achetagames.epic_asset_manager
+
+	# gaming
+	$run yay -S --sudoloop --noconfirm heroic-games-launcher
+
+	# steam
+	## todo: enable multilib repository before installing steam
+	#$run $sudox pacman -S --noconfirm steam
+
+
+	# backup solutions
+	# $run yay -S  --sudoloop --noconfirm timeshift    ## todo: investigate
+	#
+
+	echo "> Configuring samba..."
+	$run add_samba_config_if_missing
+
+	echo
+	echo "Post-installation instructions:"
+	echo "-------------------------------"
+	echo
+	echo "Set themes and icons:"
+	echo "   - Run 'nwg-look' and set the global GTK and icon theme"
+	echo "   - Open 'kvantummanager' (run with sudo for system-wide changes) to select and apply the Catppuccin theme"
+	echo "   - Open 'qt6ct' to set the icon theme"
+	echo
+	echo "Login manager theme:"
+	echo "   - Edit /etc/sddm.conf:"
+	echo "     * under [General] add:"
+	echo "        InputMethod=qtvirtualkeyboard"
+	echo "        GreeterEnvironment=QML2_IMPORT_PATH=/usr/share/sddm/themes/silent/components/,QT_IM_MODULE=qtvirtualkeyboard"
+	echo "     * under [Theme] add:"
+	echo "        Current=silent"
+	echo "   - Change ConfigFile in /usr/share/sddm/themes/silent"
+	echo "   - More details: https://github.com/uiriansan/SilentSDDM"
+	echo
+	echo "Nextcloud:"
+	echo "   - First, login to nextcloud account in a browser"
+	echo "   - Run Nextcloud Desktop and proceed to connect"
+	echo
+	echo "To install steam:"
+	echo "   - Edit /etc/pacman.conf - uncomment the [multilib] section"
+	echo "   - Run 'sudo pacman -Syyu' to update the package database"
+	echo "   - Run 'sudo pacman -S steam' to install steam"
+	echo "   - When asked for provider for vulkan-driver, select the appropriate one for your GPU"
+	echo
+}
+
+update_sudoers() {
+	get_sudo
+
+	sudoers='/etc/sudoers'
+	username="$(whoami)"
+	allowed_executables='/usr/bin/veracrypt /usr/sbin/grub-reboot /sbin/reboot'
+
+	append_to_file "" "$sudoers" "$sudox"
+	for exe in $allowed_executables; do
+		line="$username ALL = NOPASSWD: $exe"
+		append_to_file_unique "$line" "$sudoers" "$sudox"
+	done
+}
+
+install_dots() {
+	local dir=$(safe_get_script_dir)
+	local files="vimrc vim ideavimrc bash_aliases bash_extra bin config/tmux config/nvim config/starship.toml config/ranger/rc.config config/i3 config/polybar config/rofi config/kitty config/picom config/hypr config/tofi config/waybar config/gtk-3.0/settings.ini config/gtk-4.0/settings.ini config/wlogout config/dunst config/xsettingsd config/lazygit"
+	local backup_dir="$dir-$(date "+%Y-%m-%d-%H%M")"
+
+	## pull submodules
+	(
+		$run cd $dir
+		$run git submodule update --init --recursive
+	)
+
+	## backup existing dotfiles and create symlinks to the new ones
+	if [[ -d $backup_dir ]]; then
+		$run rm -rf $backup_dir
+	fi
+
+	$run mkdir -p "$backup_dir/.config/ranger"
+	$run mkdir -p "$HOME/.config/ranger"
+	$run mkdir -p "$backup_dir/.config/gtk-3.0"
+	$run mkdir -p "$HOME/.config/gtk-3.0"
+	$run mkdir -p "$backup_dir/.config/gtk-4.0"
+	$run mkdir -p "$HOME/.config/gtk-4.0"
+
+	for fname in $files; do
+		file=$HOME/.$fname
+		if [[ -e $file ]]; then
+			$run mv $file "$backup_dir/.$fname"
+		elif [[ -h $file ]]; then
+			$run rm $file
+		fi
+		$run ln -s "$dir/$fname" $file
+	done
+
+	## add extra .bashrc configuration
+	local import_bash_extra_line='. $HOME/.bash_extra'
+	append_to_file_unique "$import_bash_extra_line" "$HOME/.bashrc"
+
+	## gitconfig 
+	local import_gitconfig_line="path = $dir/gitconfig"
+	$run touch $HOME/.gitconfig
+	append_to_file_unique "[include]\n\t$import_gitconfig_line" "$HOME/.gitconfig"
+
+	## copy assets
+	$run mkdir -p "$HOME/.config/assets"
+	$run cp -r "$dir/assets/backgrounds" "$HOME/.config/assets/"
+	$run cp -r "$dir/assets/wlogout" "$HOME/.config/assets/"
+	$run cp -r "$dir/assets/sounds" "$HOME/.config/assets/"
+
+	## hopefully everyghing to this point went smoothly
+	echo "Completed."
+}
+
+################################################################################
+
+error=""
+need_help=0
+need_update_os=0
+need_desktop=0
+need_sudoers=0
+need_dots=0
+
+parse_args() {
+	if [[ $# -eq 0 ]]; then
+		need_help=1
+		return 0
+	fi
+
+	local no_desktop=0
+	local no_sudoers=0
+	local no_dots=0
+
+	while [[ $# -gt 0 ]]; do
+		case $1 in
+			-h|--help)
+				need_help=1
+				return 0
+				;;
+
+			--desktop)
+				need_desktop=1
+				shift
+				;;
+			--no-desktop)
+				no_desktop=1
+				shift
+				;;
+
+			--sudoers)
+				need_sudoers=1
+				shift
+				;;
+			--no-sudoers)
+				no_sudoers=1
+				shift
+				;;
+
+			--dots)
+				need_dots=1
+				shift
+				;;
+			--no-dots)
+				no_dots=1
+				shift
+				;;
+
+			-a|--all)
+				need_desktop=1
+				need_sudoers=1
+				need_dots=1
+				shift
+				;;
+
+			--mock)
+				run="mockrun"
+				shift
+				;;
+
+			*)
+				error="invalid argument '$1'"
+				need_help=1
+				return 1
+				;;
+		esac
+	done
+
+	need_gui=$(($need_desktop-$no_desktop))
+	need_sudoers=$(($need_sudoers-$no_sudoers))
+	need_dots=$(($need_dots-$no_dots))
+}
+
+main() {
+	parse_args $@
+
+	if [[ -n $error || $need_help -ne 0 ]]; then
+		local parse_args_res=$?
+		if [[ -n $error ]]; then
+			echoerr "ERROR: $error"
+		fi
+		if [[ $need_help -ne 0 ]]; then
+			help
+		fi
+		exit $parse_args_res
+	fi
+
+	set -e
+
+	if [[ $need_desktop -eq 1 ]]; then
+		echo "--- Updating the system ------------------------------------"
+		update_os
+		echo ""
+	fi
+
+	if [[ $need_desktop -eq 1 ]]; then
+		echo "--- Installing GUI tools -----------------------------------"
+		install_desktop
+		echo ""
+	fi
+
+	if [[ $need_sudoers -eq 1 ]]; then
+		echo "--- Updating sudoers ---------------------------------------"
+		update_sudoers
+		echo ""
+	fi
+
+	if [[ $need_dots -eq 1 ]]; then
+		echo "--- Copying config files -----------------------------------"
+		install_dots
+		echo ""
+	fi
+}
+
+main $@
+
