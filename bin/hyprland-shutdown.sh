@@ -1,7 +1,6 @@
 #!/bin/bash
 
 ~/.bin/play-shutdown-sound.sh &
-sleep 1
+sleep 2
 systemctl poweroff
-
 
