@@ -166,6 +166,7 @@ install_desktop() {
 	$run $sudox pacman -S --noconfirm vlc vlc-plugin-ffmpeg vlc-plugin-x264 vlc-plugin-x265 
 	$run $sudox pacman -S --noconfirm transmission-cli transmission-gtk
 	$run $sudox pacman -S --noconfirm mission-center
+	$run $sudox pacman -S --noconfirm earlyoom
 
 	# echo "> Installing printing service..."
 	# $run $sudox pacman -S --noconfirm cups cups-pdf cups-pk-helper
@@ -280,7 +281,7 @@ update_sudoers() {
 
 install_dots() {
 	local dir=$(safe_get_script_dir)
-	local files="vimrc vim ideavimrc bash_aliases bash_extra bin config/tmux config/nvim config/starship.toml config/ranger/rc.config config/i3 config/polybar config/rofi config/kitty config/picom config/hypr config/tofi config/waybar config/gtk-3.0/settings.ini config/gtk-4.0/settings.ini config/wlogout config/dunst config/xsettingsd config/lazygit"
+	local files="vimrc vim ideavimrc bash_aliases bash_extra bin config/tmux config/nvim config/starship.toml config/ranger/rc.config config/i3 config/polybar config/rofi config/kitty config/picom config/hypr config/tofi config/waybar config/gtk-3.0/settings.ini config/gtk-4.0/settings.ini config/wlogout config/dunst config/xsettingsd config/lazygit config/systemd/user/earlyoom.service"
 	local backup_dir="$dir-$(date "+%Y-%m-%d-%H%M")"
 
 	## pull submodules
@@ -300,6 +301,7 @@ install_dots() {
 	$run mkdir -p "$HOME/.config/gtk-3.0"
 	$run mkdir -p "$backup_dir/.config/gtk-4.0"
 	$run mkdir -p "$HOME/.config/gtk-4.0"
+	$run mkdir -p "$HOME/.config/systemd/user"
 
 	for fname in $files; do
 		file=$HOME/.$fname
@@ -325,6 +327,9 @@ install_dots() {
 	$run cp -r "$dir/assets/backgrounds" "$HOME/.config/assets/"
 	$run cp -r "$dir/assets/wlogout" "$HOME/.config/assets/"
 	$run cp -r "$dir/assets/sounds" "$HOME/.config/assets/"
+
+	## enable memory guardian
+	$run systemctl --user enable earlyoom.service
 
 	## hopefully everyghing to this point went smoothly
 	echo "Completed."

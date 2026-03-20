@@ -1,0 +1,9 @@
+[Unit]
+Description=EarlyOOM User Service
+
+[Service]
+ExecStart=/usr/bin/earlyoom -m 10 -s 10 -r 60 -n
+Restart=always
+
+[Install]
+WantedBy=default.target
