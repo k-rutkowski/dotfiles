@@ -185,7 +185,7 @@ install_desktop() {
 	$run yay -S --sudoloop --noconfirm google-chrome
 	
 	# spotify
-	$run yay -S --sudoloop --noconfirm spotify
+	#$run yay -S --sudoloop --noconfirm spotify
 
 	# nextcloud
 	$run yay -S --sudoloop --noconfirm nextcloud-client
@@ -215,6 +215,9 @@ install_desktop() {
 
 	echo "> Installing macropad programming tool..."
 	$run cargo install ch57x-keyboard-tool
+
+	# music
+	$run flatpak install flathub com.mastermindzh.tidal-hifi
 
 	# game development
 	$run flatpak install flathub io.github.achetagames.epic_asset_manager
