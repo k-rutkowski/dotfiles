@@ -83,7 +83,7 @@ install_desktop() {
 
 	echo "> Installing basic cli tools..."
 	$run $sudox pacman -S --noconfirm neovim tar less bc btop cifs-utils net-tools git git-lfs base-devel cmake make clang ninja
-	$run $sudox pacman -S --noconfirm tldr python3 curl wget nodejs npm tmux ranger imagemagick os-prober xdotool xclip entr fastfetch jq lsd bat zoxide ripgrep fd git-delta dust rsync trash-cli lazygit chafa
+	$run $sudox pacman -S --noconfirm man tldr python3 curl wget nodejs npm tmux ranger imagemagick os-prober xdotool xclip entr fastfetch jq lsd bat zoxide ripgrep fd git-delta dust rsync trash-cli lazygit chafa
 	$run $sudox pacman -S --noconfirm gvfs-smb smbclient
 
 	$run git-lfs install
@@ -217,10 +217,10 @@ install_desktop() {
 	$run cargo install ch57x-keyboard-tool
 
 	# music
-	$run flatpak install flathub com.mastermindzh.tidal-hifi
+	$run flatpak install -y flathub com.mastermindzh.tidal-hifi
 
 	# game development
-	$run flatpak install flathub io.github.achetagames.epic_asset_manager
+	$run flatpak install -y flathub io.github.achetagames.epic_asset_manager
 
 	# gaming
 	$run yay -S --sudoloop --noconfirm heroic-games-launcher

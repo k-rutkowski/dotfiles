@@ -33,7 +33,7 @@ help() {
 	echo
 	echo "MAIN OPTIONS"
 	echo "  -h, --help          show help"
-	echo "  -a, --all           install and configure everyghing"
+	echo "  -a, --all           install and configure everything"
 	echo ""
 	echo "INCLUDE OPTIONS"
 	echo "  --desktop           install gui programs"
@@ -252,7 +252,7 @@ install_dots() {
 
 	## pull submodules
 	(
-		$run cd $dir
+		cd "$dir"
 		$run git submodule update --init --recursive
 	)
 
@@ -293,7 +293,7 @@ install_dots() {
 	$run cp -r "$dir/assets/wlogout" "$HOME/.config/assets/"
 	$run cp -r "$dir/assets/sounds" "$HOME/.config/assets/"
 
-	## hopefully everyghing to this point went smoothly
+	## hopefully everything to this point went smoothly
 	echo "Completed."
 }
 
@@ -370,7 +370,7 @@ parse_args() {
 		esac
 	done
 
-	need_gui=$(($need_desktop-$no_desktop))
+	need_desktop=$(($need_desktop-$no_desktop))
 	need_sudoers=$(($need_sudoers-$no_sudoers))
 	need_dots=$(($need_dots-$no_dots))
 }
