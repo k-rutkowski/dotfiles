@@ -128,9 +128,9 @@ install_desktop() {
 	$run $sudox pacman -S --noconfirm kitty
 	
 	echo "> Installing desktop environment..."
-	$run $sudox pacman -S --noconfirm hyprland xdg-desktop-portal-hyprland polkit-kde-agent dunst qt5-wayland qt6-wayland xorg-wayland
+	$run $sudox pacman -S --noconfirm hyprland hyprpaper awww xdg-desktop-portal-hyprland polkit-kde-agent dunst qt5-wayland qt6-wayland xorg-wayland
 	$run $sudox pacman -S --noconfirm waybar cliphist
-	$run yay -S --sudoloop --noconfirm tofi swww hyprpicker hyprlock wlogout hypridle
+	$run yay -S --sudoloop --noconfirm tofi hyprpicker hyprlock wlogout hypridle pyprland
 
 	echo "> Installing themes and theming tools..."
 	$run $sudox pacman -S --noconfirm nwg-look qt5ct qt6ct kvantum
@@ -284,7 +284,7 @@ update_sudoers() {
 
 install_dots() {
 	local dir=$(safe_get_script_dir)
-	local files="vimrc vim ideavimrc bash_aliases bash_extra bin config/tmux config/nvim config/starship.toml config/ranger/rc.config config/i3 config/polybar config/rofi config/kitty config/picom config/hypr config/tofi config/waybar config/gtk-3.0/settings.ini config/gtk-4.0/settings.ini config/wlogout config/dunst config/xsettingsd config/lazygit config/systemd/user/earlyoom.service"
+	local files="vimrc vim ideavimrc bash_aliases bash_extra bin config/tmux config/nvim config/starship.toml config/ranger/rc.config config/i3 config/polybar config/rofi config/kitty config/picom config/hypr config/pyprland config/tofi config/waybar config/gtk-3.0/settings.ini config/gtk-4.0/settings.ini config/wlogout config/dunst config/xsettingsd config/lazygit config/systemd/user/earlyoom.service"
 	local backup_dir="$dir-$(date "+%Y-%m-%d-%H%M")"
 
 	## pull submodules

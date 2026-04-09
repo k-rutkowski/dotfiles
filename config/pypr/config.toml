@@ -1,0 +1,15 @@
+[pyprland]
+plugins = [
+	"wallpapers",
+]
+
+[wallpapers]
+unique = true
+path = "~/Pictures/wallpapers/"  # Your local collection
+online_ratio = 1.0               # Always fetch online
+#online_backends = ["wallhaven"] # Sources to use
+#online_keywords = ["nature", "landscape"]   # Your preferred themes
+interval = 60
+recurse = true
+clear_command = "awww clear"
+command = "awww img '[file]' --transition-fps 255 --transition-type outer --transition-duration 0.8"
