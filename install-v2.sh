@@ -82,8 +82,8 @@ install_desktop() {
 	get_sudo
 
 	echo "> Installing basic cli tools..."
-	$run $sudox pacman -S --noconfirm neovim tar less bc btop cifs-utils net-tools git git-lfs base-devel cmake make clang ninja
-	$run $sudox pacman -S --noconfirm man tldr python3 curl wget nodejs npm tmux ranger imagemagick os-prober xdotool xclip entr fastfetch jq lsd bat zoxide ripgrep fd git-delta dust rsync trash-cli lazygit chafa
+	$run $sudox pacman -S --noconfirm neovim tar less bc btop cifs-utils net-tools bind git git-lfs base-devel cmake make clang ninja
+	$run $sudox pacman -S --noconfirm man tldr python3 curl wget nodejs npm tmux ranger imagemagick os-prober xdotool xclip entr fastfetch jq lsd bat zoxide ripgrep fd git-delta dust rsync trash-cli lazygit chafa socat
 	$run $sudox pacman -S --noconfirm gvfs-smb smbclient
 
 	$run git-lfs install

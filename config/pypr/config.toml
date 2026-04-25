@@ -1,14 +1,12 @@
 [pyprland]
-plugins = [
-	"wallpapers",
-]
+plugins = ["wallpapers"]
 
 [wallpapers]
 unique = true
-path = "~/Pictures/wallpapers/"  # Your local collection
-online_ratio = 1.0               # Always fetch online
-#online_backends = ["wallhaven"] # Sources to use
-#online_keywords = ["nature", "landscape"]   # Your preferred themes
+path = "~/Pictures/wallpapers/"
+online_ratio = 1
+online_backends = ["wallhaven"]
+online_keywards = ["dark"]
 interval = 60
 recurse = true
 clear_command = "awww clear"
