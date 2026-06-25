@@ -130,6 +130,7 @@ install_desktop() {
 	echo "> Installing desktop environment..."
 	$run $sudox pacman -S --noconfirm hyprland hyprpaper awww xdg-desktop-portal-hyprland polkit-kde-agent dunst qt5-wayland qt6-wayland xorg-wayland
 	$run $sudox pacman -S --noconfirm waybar cliphist
+	$run $sudox pacman -S --noconfirm network-manager-applet
 	$run yay -S --sudoloop --noconfirm tofi hyprpicker hyprlock wlogout hypridle pyprland
 
 	echo "> Installing themes and theming tools..."
@@ -205,8 +206,14 @@ install_desktop() {
 	# ide
 	$run yay -S --sudoloop --noconfirm rider
 
+	# AI
+	$run yay -S --sudoloop --noconfirm pi
+
 	# screen recording
 	$run $sudox pacman -S --noconfirm obs-studio
+
+	# dygma keyboard manager
+	$run yay -S --sudoloop --noconfirm bazecor
 
 	# vial (keyboard layout configuration)
 	$run yay -S --sudoloop --noconfirm vial

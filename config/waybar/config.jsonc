@@ -151,6 +151,7 @@
         "format-disconnected": "󰖪 ",
         "tooltip-format-disconnected": "Disconnected",
         "format-alt": "<span foreground='#99ffdd'> {bandwidthDownBytes}</span> <span foreground='#ffcc66'> {bandwidthUpBytes}</span>",
+        "on-click-right": "kitty --app-id=nm-applet nmtui-connect",
         "interval": 2
     }
 }
