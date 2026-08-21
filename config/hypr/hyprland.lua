@@ -15,7 +15,11 @@ hl.monitor({
     position = "0x0",
     scale = 1,
 })
-hl.monitor({ output = secondary_monitor, disabled = true })
+hl.monitor({
+    output = secondary_monitor,
+    position = "-1920x0",
+    scale = 1,
+})
 
 hl.on("hyprland.start", function()
     hl.exec_cmd("~/.bin/play-startup-sound.sh")
