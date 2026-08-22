@@ -19,6 +19,7 @@ hl.monitor({
     output = secondary_monitor,
     position = "-1920x0",
     scale = 1,
+    disabled = true,
 })
 
 hl.on("hyprland.start", function()
