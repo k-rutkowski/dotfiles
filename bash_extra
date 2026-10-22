@@ -16,6 +16,15 @@ if [ -f ~/.bash_secret ]; then
     . ~/.bash_secret
 fi
 
+ccd() {
+	if [[ $# -ne 1 ]]; then
+		echo "Usage: ccd <path>"
+		return 1
+	fi
+
+	mkdir -p "$1" && command cd "$1"
+}
+
 fstr() {
     if [[ $# -lt 1 || $# -gt 2 ]]; then
         echo "Usage: fstr <string> [directory]"
