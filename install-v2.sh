@@ -179,14 +179,15 @@ install_desktop() {
 
 	echo "> Installing other stuff..."
 
-	# image edition
-	$run yay -S --sudoloop --noconfirm pinta
+	# image/pdf edition
+	$run yay -S --sudoloop --noconfirm pinta revpdf-bin
 	
 	# google-chrome
 	$run yay -S --sudoloop --noconfirm google-chrome
 	
 	# spotify
-	#$run yay -S --sudoloop --noconfirm spotify
+	$run yay -S --sudoloop --noconfirm spotify
+	$run yay -S --sudoloop --noconfirm spotatui-bin
 
 	# nextcloud
 	$run yay -S --sudoloop --noconfirm nextcloud-client
@@ -222,9 +223,6 @@ install_desktop() {
 
 	echo "> Installing macropad programming tool..."
 	$run cargo install ch57x-keyboard-tool
-
-	# music
-	$run flatpak install -y flathub com.mastermindzh.tidal-hifi
 
 	# game development
 	$run flatpak install -y flathub io.github.achetagames.epic_asset_manager

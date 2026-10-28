@@ -219,7 +219,8 @@ hl.workspace_rule({ workspace = "11", monitor = secondary_monitor })
 hl.workspace_rule({ workspace = "12", monitor = secondary_monitor })
 hl.workspace_rule({
     workspace = "special:music",
-    on_created_empty = "flatpak run com.mastermindzh.tidal-hifi",
+    -- on_created_empty = "spotify-launcher",
+    on_created_empty = "kitty spotatui",
     persistent = false,
 })
 hl.workspace_rule({ workspace = "special:music", gaps_out = 120, gaps_in = 4 })
