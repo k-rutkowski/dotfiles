@@ -29,6 +29,12 @@ vim.keymap.set('n', '<leader>Y', [["+Y]], { noremap = true })
 vim.keymap.set({'n', 'v'}, '<leader>d', [["_d]], { noremap = true })
 vim.keymap.set('x', '<leader>p', [["_dP]], { noremap = true })
 
+vim.keymap.set('n', "<leader>.", function()
+	local cursor = vim.api.nvim_win_get_cursor(0)
+	vim.fn.append(vim.fn.line("."), vim.fn.getline("."))
+	vim.api.nvim_win_set_cursor(0, { cursor[1] + 1, cursor[2] })
+end, { noremap = true, desc = "Duplicate line" })
+
 -- text operations
 vim.keymap.set('v', '<leader>s', '"by:%s/<C-r>b//gI<left><left><left>', { noremap = true, desc = 'Substitute all occurences of highlighted text' })
 vim.keymap.set('n', '<leader>s', [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<left><left><left>]], { noremap = true, desc = 'Substitute all occurences of a word under cursor' })

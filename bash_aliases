@@ -17,6 +17,7 @@ alias tree='ls --tree --depth=4 -I=.git --header --git --icon auto'
 alias cd..='cd ..'
 alias cd...='cd ../..'
 alias cd....='cd ../../..'
+alias cd_='cd $_'
 
 alias cpv='rsync -ah --info=progress2'
 
